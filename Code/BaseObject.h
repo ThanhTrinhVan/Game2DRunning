@@ -28,7 +28,7 @@ public:
 
 protected:
 	SDL_Texture* p_object_; // for saving image
-	SDL_Rect rect_;// for saving size of img
+	SDL_Rect rect_;// for saving size of img, which you load in function loadImg
 };
 
 #endif // ! BASE_OBJECT_H_

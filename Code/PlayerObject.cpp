@@ -21,6 +21,7 @@ PlayerObject::PlayerObject()
 	map_x = 0;
 	map_y = 0;
 	is_died = false;
+	money_count = 0;
 }
 
 PlayerObject::~PlayerObject()
@@ -163,16 +164,37 @@ void PlayerObject::checkToMap(Map & map_data)
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) {
 		if (x_val > 0) // chuyen dong sang phai
 		{
-			if (map_data.tile[y1][x2] != BLANK_TILE || map_data.tile[y2][x2] != BLANK_TILE) {
-				x_pos = x2 * TILE_SIZE; // dung tai vi tri x2
-				x_pos -= (width_frame + 1);
-				x_val = 0;
+			int val1 = map_data.tile[y1][x2];
+			int val2 = map_data.tile[y2][x2];
+
+			// va cham voi o tien, o do se bien mat, gan vao 0
+			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
+				map_data.tile[y1][x2] = 0;
+				map_data.tile[y2][x2] = 0;
+				increaseMoney();
+			}
+			else {
+				if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
+					x_pos = x2 * TILE_SIZE; // dung tai vi tri x2
+					x_pos -= (width_frame + 1);
+					x_val = 0;
+				}
 			}
 		}
 		else if (x_val < 0) {
-			if (map_data.tile[y1][x1] != BLANK_TILE || map_data.tile[y2][x1] != BLANK_TILE) {
-				x_pos = (x1 + 1) * TILE_SIZE; // dung tai vi tri x1
-				x_val = 0;
+			int val1 = map_data.tile[y1][x1];
+			int val2 = map_data.tile[y2][x1];
+			
+			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
+				map_data.tile[y1][x1] = 0;
+				map_data.tile[y2][x1] = 0;
+				increaseMoney();
+			}
+			else {
+				if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
+					x_pos = (x1 + 1) * TILE_SIZE; // dung tai vi tri x1
+					x_val = 0;
+				}
 			}
 		}
 	}
@@ -187,17 +209,39 @@ void PlayerObject::checkToMap(Map & map_data)
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) {
 		if (y_val > 0) // chuyen dong xuong duoi
 		{
-			if (map_data.tile[y2][x1] != BLANK_TILE || map_data.tile[y2][x2] != BLANK_TILE) {
-				y_pos = y2 * TILE_SIZE; // dung tai vi tri x2
-				y_pos -= (height_frame + 1);
-				y_val = 0;
-				on_ground = true;
+			int val1 = map_data.tile[y2][x1];
+			int val2 = map_data.tile[y2][x2];
+
+			// va cham voi o tien, o do se bien mat, gan vao 0
+			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
+				map_data.tile[y1][x2] = 0;
+				map_data.tile[y2][x2] = 0;
+				increaseMoney();
+			}
+			else {
+				if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
+					y_pos = y2 * TILE_SIZE; // dung tai vi tri x2
+					y_pos -= (height_frame + 1);
+					y_val = 0;
+					on_ground = true;
+				}
 			}
 		}
 		else if (y_val < 0) {
-			if (map_data.tile[y1][x1] != BLANK_TILE || map_data.tile[y1][x2] != BLANK_TILE) {
-				y_pos = (y1 + 1) * TILE_SIZE; // dung tai vi tri x1
-				y_val = 0;
+			int val1 = map_data.tile[y1][x1];
+			int val2 = map_data.tile[y1][x2];
+
+			// va cham voi o tien, o do se bien mat, gan vao 0
+			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
+				map_data.tile[y1][x2] = 0;
+				map_data.tile[y2][x2] = 0;
+				increaseMoney();
+			}
+			else {
+				if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
+					y_pos = (y1 + 1) * TILE_SIZE; // dung tai vi tri x1
+					y_val = 0;
+				}
 			}
 		}
 	}
@@ -226,6 +270,21 @@ void PlayerObject::centerEntityOnMap(Map & map_data)
 		map_data.start_y = 0;
 	else if (map_data.start_y + SCREEN_HEIGHT >= map_data.max_y)
 		map_data.start_y = map_data.max_y - SCREEN_HEIGHT;
+}
+
+void PlayerObject::increaseMoney()
+{
+	money_count++;
+}
+
+SDL_Rect PlayerObject::getRectFrame() const
+{
+	SDL_Rect rt;
+	rt.x = rect_.x;
+	rt.y = rect_.y;
+	rt.w = width_frame;
+	rt.h = height_frame;
+	return rt;
 }
 
 void PlayerObject::updateImgPlayer(SDL_Renderer * des)

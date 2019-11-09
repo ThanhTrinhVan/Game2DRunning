@@ -4,6 +4,7 @@
 
 #include <Windows.h>
 #include <string>
+#include <vector>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h> // sound
@@ -11,13 +12,20 @@
 
 static SDL_Window* gWindow = NULL;
 static SDL_Renderer* gScreen = NULL;
+static SDL_Renderer* gMenuScreen = NULL;
 static SDL_Event gEvent; 
+
+// Audio
+static Mix_Chunk* gSoundScreen = NULL;
+
+// font text
+static TTF_Font* gFont = NULL;
 
 const int FRAME_PER_SECOND = 25; // fps
 
 // parameter of screen
-const int SCREEN_WIDTH = 1280;
-const int SCREEN_HEIGHT = 640;
+const int SCREEN_WIDTH = 1280; // 20*64
+const int SCREEN_HEIGHT = 640; // 10*64
 const int SCREEN_BPP = 32;
 
 // ma mau cho background de cho trung voi ma mau background cua anh nhan vat
@@ -28,6 +36,7 @@ const int COLOR_KEY_B = 255;
 const int RENDER_DRAW_COLOR = 0xff; // 255
 
 #define BLANK_TILE 0
+#define SUPPORT_TILE 4
 #define TILE_SIZE 64 
 #define MAX_MAP_X 400 // so o tile map trong 1 man hinh nhin duoc
 #define MAX_MAP_Y 10 //
@@ -55,6 +64,12 @@ typedef struct Input {
 	int down_;
 	int jump_;
 };
+
+namespace SDLCommonFunc
+{
+	bool checkCollision(const SDL_Rect &object1, const SDL_Rect &object2);
+	int showMenu(TTF_Font* font, SDL_Renderer* des);
+}
  
 #endif // ! COMMON_FUNCTION_H_
 
