@@ -9,6 +9,8 @@
 #include "ImpTimer.h"
 #include "BirdObject.h"
 #include "TextObject.h"
+#include "Menu.h"
+#include "PillarObject.h"
 #include <iostream>
 
 #undef main // SDL_main error
@@ -57,9 +59,9 @@ bool initData()
 	return success;
 }
 
-bool loadBackGround()
+bool loadBackGround(std::string path)
 {
-	bool ret = gBackground.loadImg("G:/7th/Software_engineering/game2D/Data/background.png", gScreen);
+	bool ret = gBackground.loadImg(path, gScreen);
 	if (!ret)
 		return false;
 	return true;
@@ -103,9 +105,21 @@ int main(int argc, char* argv[])
 
     std::cout << "Wellcome to running game!\n"; 
 	if (initData() == false)
-		return -1;
+		return 2;
 
-	if (loadBackGround() == false)
+	Menu menu;
+	menu.loadImg("G:/7th/Software_engineering/game2D/Data/menu_background.png", gScreen);
+	menu.setNumItems(5);
+	int px[5] = { 200, 200, 800, 800, 1100 };
+	int py[5] = { 200, 300, 200, 300, 550};
+	menu.setPos(px, py);
+	std::string lst[5] = { "Play", "Level", "Instruction", "Documentation", "Exit" };
+	menu.setTextItems(lst);
+	TypeMenu ret = menu.showMenu(gFont, gScreen);
+	if (ret == TypeMenu::Exit)
+		return 0;
+
+	if (loadBackGround("G:/7th/Software_engineering/game2D/Data/background.png") == false)
 		return -1;
 
 	GameMap game_map;
@@ -120,26 +134,42 @@ int main(int argc, char* argv[])
 	TextObject mark_game;
 	mark_game.setColor(TextObject::RED_TEXT);
 
+	PillarObject pillar;
+
 	bool isQuit = false;
 	unsigned int score = 100;
-	//Mix_PlayChannel(-1, gSoundScreen, 1);
+	Mix_PlayChannel(-1, gSoundScreen, 1);
 	while (!isQuit)
 	{
 		if (p_player.isDied() == true)
 			break;
 		fps_time.start();
+		SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+		SDL_RenderClear(gScreen);
+
+		gBackground.render(gScreen, NULL);
+
 		while (SDL_PollEvent(&gEvent) != 0)
 		{
 			if (gEvent.type == SDL_QUIT) {
 				isQuit = true;
 			}
 			p_player.handelInputAction(gEvent, gScreen);
+			pillar.handelInputAction(gEvent, gScreen);
 		}
 
-		SDL_SetRenderDrawColor(gScreen, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
-		SDL_RenderClear(gScreen);
-
-		gBackground.render(gScreen, NULL);
+		//// check click mouse
+		//while (SDL_PollEvent(&gEvent))
+		//{
+		//	switch (gEvent.type)
+		//	{
+		//	case SDL_MOUSEBUTTONDOWN:
+		//		pillar.draw(0, 0, gScreen);
+		//		break;
+		//	default:
+		//		break;
+		//	}
+		//}
 
 		Map map_data = game_map.getMap();
 		
@@ -182,6 +212,7 @@ int main(int argc, char* argv[])
 		mark_game.setRect(SCREEN_WIDTH - 3 * TILE_SIZE, TILE_SIZE);
 		mark_game.setText(txt);
 		mark_game.drawText(gFont, gScreen);
+
 		// update screen
 		SDL_RenderPresent(gScreen);
 
@@ -190,6 +221,17 @@ int main(int argc, char* argv[])
 		if (real_time < time_one_frame)
 			SDL_Delay(time_one_frame - real_time); // uint32 x, neu x < 0 se tu dong chuyen ve 0
 	}
+
+	menu.loadImg("G:/7th/Software_engineering/game2D/Data/menu_background.png", gScreen);
+	menu.setNumItems(2);
+	int px2[2] = { 200, 800 };
+	int py2[2] = { 200, 200 };
+	menu.setPos(px2, py2);
+	std::string lstt[2] = { "Play Again", "Go to StartMenu" };
+	menu.setTextItems(lstt);
+	ret = menu.showMenu(gFont, gScreen);
+	if (ret == TypeMenu::Exit)
+		return 0;
 
 	close();
 	return 0;

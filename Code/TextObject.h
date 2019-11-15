@@ -20,6 +20,7 @@ public:
 	void setText(const std::string &txt) { textVal = txt; };
 	void setColor(const int &type);
 	void drawText(TTF_Font* font, SDL_Renderer* des);
+	std::string getText() { return textVal; };
 
 private:
 	std::string textVal;

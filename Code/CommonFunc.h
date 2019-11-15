@@ -12,7 +12,6 @@
 
 static SDL_Window* gWindow = NULL;
 static SDL_Renderer* gScreen = NULL;
-static SDL_Renderer* gMenuScreen = NULL;
 static SDL_Event gEvent; 
 
 // Audio
@@ -65,10 +64,20 @@ typedef struct Input {
 	int jump_;
 };
 
+// type of Menu
+enum TypeMenu {
+	Play = 0,
+	Instruction = 1,
+	Continue = 2,
+	Exit = 3,
+	None = 4
+};
+
 namespace SDLCommonFunc
 {
 	bool checkCollision(const SDL_Rect &object1, const SDL_Rect &object2);
-	int showMenu(TTF_Font* font, SDL_Renderer* des);
+	bool checkFocus(const int &x, const int &y, const SDL_Rect& rect);
+	TypeMenu checkType(std::string txt);
 }
  
 #endif // ! COMMON_FUNCTION_H_

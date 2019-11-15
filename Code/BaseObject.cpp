@@ -11,7 +11,6 @@ BaseObject::BaseObject()
 	rect_.h = 0;
 }
 
-
 BaseObject::~BaseObject()
 {
 	free();

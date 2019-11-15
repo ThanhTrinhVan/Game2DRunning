@@ -88,8 +88,21 @@ bool SDLCommonFunc::checkCollision(const SDL_Rect & object1, const SDL_Rect & ob
 	return false;
 }
 
-int SDLCommonFunc::showMenu(TTF_Font * font, SDL_Renderer * des)
+bool SDLCommonFunc::checkFocus(const int & x, const int & y, const SDL_Rect & rect)
 {
-
-	return 0;
+	if (x >= rect.x && x < (rect.x + rect.w) &&
+		y >= rect.y && y < (rect.y + rect.h))
+		return true;
+	return false;
 }
+
+TypeMenu SDLCommonFunc::checkType(std::string txt)
+{
+	if (txt == "Play")
+		return TypeMenu::Play;
+	else if (txt == "Exit")
+		return TypeMenu::Exit;
+	else
+		return TypeMenu::None;
+}
+

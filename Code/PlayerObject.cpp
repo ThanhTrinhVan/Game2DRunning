@@ -33,7 +33,7 @@ bool PlayerObject::loadImg(std::string path, SDL_Renderer * screen)
 	bool ret = BaseObject::loadImg(path, screen);
 	if (ret == true) {
 		width_frame = rect_.w / NUMBER_FRAME;
-		height_frame = rect_.h;
+		height_frame = 1 * rect_.h;
 	}
 	return ret;
 }
