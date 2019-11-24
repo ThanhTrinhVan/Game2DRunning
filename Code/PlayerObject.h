@@ -53,9 +53,11 @@ private:
 	int map_y;
 
 	bool is_died;
-	
+
 	void updateImgPlayer(SDL_Renderer* des);
 };
 
 #endif // !PLAYER_OBJECT_H
+
+
 

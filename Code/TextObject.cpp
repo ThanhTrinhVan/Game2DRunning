@@ -16,6 +16,7 @@ TextObject::~TextObject()
 {
 }
 
+
 void TextObject::setColor(const int & type)
 {
 	if (type == RED_TEXT)

@@ -16,12 +16,11 @@ public:
 	};
 	TextObject();
 	~TextObject();
-
+	void setWidth(const int &length) { rect_.w = length * TILE_SIZE/ 3; };
 	void setText(const std::string &txt) { textVal = txt; };
 	void setColor(const int &type);
 	void drawText(TTF_Font* font, SDL_Renderer* des);
 	std::string getText() { return textVal; };
-
 private:
 	std::string textVal;
 	SDL_Color textColor;
@@ -30,3 +29,4 @@ private:
 
 
 #endif // !TEXT_OBJECT_H
+

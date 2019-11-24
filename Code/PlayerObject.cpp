@@ -33,7 +33,7 @@ bool PlayerObject::loadImg(std::string path, SDL_Renderer * screen)
 	bool ret = BaseObject::loadImg(path, screen);
 	if (ret == true) {
 		width_frame = rect_.w / NUMBER_FRAME;
-		height_frame = 1 * rect_.h;
+		height_frame = rect_.h;
 	}
 	return ret;
 }
@@ -114,7 +114,7 @@ void PlayerObject::setClips()
 {
 	if (width_frame > 0 && height_frame > 0) {
 		for (int i = 0; i < NUMBER_FRAME; i++) {
-			frame_clip[i].x = i*width_frame;
+			frame_clip[i].x = i * width_frame;
 			frame_clip[i].y = 0;
 			frame_clip[i].w = width_frame;
 			frame_clip[i].h = height_frame;
@@ -184,7 +184,7 @@ void PlayerObject::checkToMap(Map & map_data)
 		else if (x_val < 0) {
 			int val1 = map_data.tile[y1][x1];
 			int val2 = map_data.tile[y2][x1];
-			
+
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x1] = 0;
 				map_data.tile[y2][x1] = 0;
@@ -290,9 +290,9 @@ SDL_Rect PlayerObject::getRectFrame() const
 void PlayerObject::updateImgPlayer(SDL_Renderer * des)
 {
 	if (on_ground == true) {
-		loadImg("G:/7th/Software_engineering/game2D/Data/player_run/run.png", des);
+		loadImg("E:/nguyen trung kien/7/Game/Ninja/Data/player_run/run1.png", des);
 	}
 	else {
-		loadImg("G:/7th/Software_engineering/game2D/Data/player_run/jump.png", des);
+		loadImg("E:/nguyen trung kien/7/Game/Ninja/Data/player_run/jump1.png", des);
 	}
 }

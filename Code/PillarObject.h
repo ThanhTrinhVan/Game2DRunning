@@ -4,6 +4,8 @@
 
 #include "CommonFunc.h"
 
+const double pi = acos(-1);
+
 class PillarObject
 {
 public:
@@ -11,13 +13,14 @@ public:
 	~PillarObject();
 
 	void handelInputAction(SDL_Event events, SDL_Renderer * des);
+	void recline(const int step, SDL_Renderer* des);
+	bool checkReclined() { return reclined; };
 
 private:
 	int height, width;
 	int posX, posY;
-	void recline(SDL_Renderer* des);
+	bool reclined;
 	void draw(int pX, int pY, SDL_Renderer* des);
 };
 
 #endif // !PILLAR_OBJECT_H
-

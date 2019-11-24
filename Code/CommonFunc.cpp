@@ -98,11 +98,19 @@ bool SDLCommonFunc::checkFocus(const int & x, const int & y, const SDL_Rect & re
 
 TypeMenu SDLCommonFunc::checkType(std::string txt)
 {
-	if (txt == "Play")
+	if (txt == "Play" || txt == "Play Again")
 		return TypeMenu::Play;
+	else if (txt == "Instruction")
+		return TypeMenu::Instruction;
+	else if (txt == "Documentation")
+		return TypeMenu::Documentation;
 	else if (txt == "Exit")
 		return TypeMenu::Exit;
+	else if (txt == "Go to StartMenu")
+		return TypeMenu::GoToStart;
+	else if (txt == "Continue")
+		return TypeMenu::Continue;
 	else
-		return TypeMenu::None;
+		return TypeMenu::Exit;
 }
 

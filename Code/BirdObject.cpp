@@ -55,7 +55,7 @@ void BirdObject::show(SDL_Renderer * des)
 
 void BirdObject::doBird(Map & gMap)
 {
-	x_val =  BIRD_SPEED_X;
+	x_val = BIRD_SPEED_X;
 	y_val = 0;
 
 	//checkToMap(gMap);
@@ -82,7 +82,7 @@ void BirdObject::checkToMap(Map & map_data)
 			int val1 = map_data.tile[y1][x2];
 			int val2 = map_data.tile[y2][x2];
 
-			if ((val1 != BLANK_TILE && val1 != SUPPORT_TILE)|| (val2 != BLANK_TILE && val2 != SUPPORT_TILE)) {
+			if ((val1 != BLANK_TILE && val1 != SUPPORT_TILE) || (val2 != BLANK_TILE && val2 != SUPPORT_TILE)) {
 				x_pos = x2 * TILE_SIZE; // dung tai vi tri x2
 				x_pos -= (frame_width + 1);
 				x_val = 0;

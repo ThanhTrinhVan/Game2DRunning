@@ -10,9 +10,9 @@
 #include <SDL_mixer.h> // sound
 #include <SDL_ttf.h> // font
 
-static SDL_Window* gWindow = NULL;
-static SDL_Renderer* gScreen = NULL;
-static SDL_Event gEvent; 
+static SDL_Window* gWindow[2] = {NULL, NULL};
+static SDL_Renderer* gScreen[2] = { NULL, NULL };
+static SDL_Event gEvent;
 
 // Audio
 static Mix_Chunk* gSoundScreen = NULL;
@@ -68,9 +68,10 @@ typedef struct Input {
 enum TypeMenu {
 	Play = 0,
 	Instruction = 1,
-	Continue = 2,
+	Documentation = 2,
 	Exit = 3,
-	None = 4
+	GoToStart = 4,
+	Continue = 5
 };
 
 namespace SDLCommonFunc
@@ -79,6 +80,5 @@ namespace SDLCommonFunc
 	bool checkFocus(const int &x, const int &y, const SDL_Rect& rect);
 	TypeMenu checkType(std::string txt);
 }
- 
-#endif // ! COMMON_FUNCTION_H_
 
+#endif // ! COMMON_FUNCTION_H_

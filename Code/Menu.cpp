@@ -1,4 +1,4 @@
-#include "pch.h"
+ #include "pch.h"
 #include "Menu.h"
 
 
@@ -76,7 +76,7 @@ TypeMenu Menu::showMenu(TTF_Font * font, SDL_Renderer * des)
 		SDL_RenderPresent(des);
 	}
 
-	return TypeMenu::None;
+	return TypeMenu::Exit;
 }
 
 void Menu::setPos(int px[], int py[])
@@ -89,11 +89,20 @@ void Menu::setPos(int px[], int py[])
 	}
 }
 
+void Menu::setLength(int pz[])
+{
+	for (int i = 0; i < numItems; i++)
+	{
+		lstItems[i].length = pz[i];
+	}
+}
+
 void Menu::setTextItems(std::string * lst)
 {
 	for (int i = 0; i < numItems; i++) {
 		lstItems[i].content.setText(lst[i]);
 		lstItems[i].content.setColor(TextObject::BLUE_TEXT);
 		lstItems[i].content.setRect(lstItems[i].pos.x, lstItems[i].pos.y);
+		lstItems[i].content.setWidth(lstItems[i].length);
 	}
 }
