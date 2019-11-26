@@ -10,7 +10,7 @@
 #include <SDL_mixer.h> // sound
 #include <SDL_ttf.h> // font
 
-static SDL_Window* gWindow[2] = {NULL, NULL};
+static SDL_Window* gWindow[2] = { NULL, NULL };
 static SDL_Renderer* gScreen[2] = { NULL, NULL };
 static SDL_Event gEvent;
 
@@ -52,7 +52,7 @@ typedef struct Map {
 
 #define PLAYER_SPEED_Y 0.5
 #define MAX_FALL_SPEED 10
-#define PLAYER_SPEED_X 5
+#define PLAYER_SPEED_X 8
 #define PLAYER_JUMP 17
 
 // cau truc di chuyen cho input
@@ -80,5 +80,6 @@ namespace SDLCommonFunc
 	bool checkFocus(const int &x, const int &y, const SDL_Rect& rect);
 	TypeMenu checkType(std::string txt);
 }
-
+ 
 #endif // ! COMMON_FUNCTION_H_
+

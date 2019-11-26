@@ -11,7 +11,6 @@ BaseObject::BaseObject()
 	rect_.h = 0;
 }
 
-
 BaseObject::~BaseObject()
 {
 	free();
@@ -40,6 +39,7 @@ void BaseObject::render(SDL_Renderer * des, const SDL_Rect * clip)
 {
 	SDL_Rect renderquad = { rect_.x, rect_.y, rect_.w, rect_.h };
 	SDL_RenderCopy(des, p_object_, clip, &renderquad);
+	//SDL_DestroyTexture(p_object_);
 }
 
 void BaseObject::free()

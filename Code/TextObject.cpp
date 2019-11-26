@@ -16,7 +16,6 @@ TextObject::~TextObject()
 {
 }
 
-
 void TextObject::setColor(const int & type)
 {
 	if (type == RED_TEXT)
@@ -33,5 +32,6 @@ void TextObject::drawText(TTF_Font * font, SDL_Renderer * des)
 {
 	SDL_Surface* message = TTF_RenderText_Solid(font, textVal.c_str(), textColor);
 	p_object_ = SDL_CreateTextureFromSurface(des, message);
-	render(des);
+	SDL_FreeSurface(message);
+	render(des, NULL);
 }

@@ -1,4 +1,4 @@
- #include "pch.h"
+#include "pch.h"
 #include "Menu.h"
 
 
@@ -29,11 +29,12 @@ TypeMenu Menu::showMenu(TTF_Font * font, SDL_Renderer * des)
 		{
 			lstItems[i].content.drawText(font, des);
 		}
-		while (SDL_PollEvent(&gEvent)) {
+		while (SDL_PollEvent(&gEvent) != 0) {
 			switch (gEvent.type)
 			{
 			case SDL_QUIT:
 				return TypeMenu::Exit;
+				break;
 			case SDL_MOUSEMOTION:
 			{
 				xm = gEvent.motion.x;
@@ -68,6 +69,7 @@ TypeMenu Menu::showMenu(TTF_Font * font, SDL_Renderer * des)
 			case SDL_KEYDOWN:
 				if (gEvent.key.keysym.sym == SDLK_ESCAPE)
 					return TypeMenu::Exit;
+				break;
 			default:
 				break;
 			}
@@ -75,7 +77,7 @@ TypeMenu Menu::showMenu(TTF_Font * font, SDL_Renderer * des)
 		// update screen
 		SDL_RenderPresent(des);
 	}
-
+	
 	return TypeMenu::Exit;
 }
 
@@ -91,8 +93,7 @@ void Menu::setPos(int px[], int py[])
 
 void Menu::setLength(int pz[])
 {
-	for (int i = 0; i < numItems; i++)
-	{
+	for (int i = 0; i < numItems; i++) {
 		lstItems[i].length = pz[i];
 	}
 }

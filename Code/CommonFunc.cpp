@@ -112,5 +112,6 @@ TypeMenu SDLCommonFunc::checkType(std::string txt)
 		return TypeMenu::Continue;
 	else
 		return TypeMenu::Exit;
+	return TypeMenu::Exit;
 }
 

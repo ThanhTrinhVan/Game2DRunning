@@ -4,6 +4,7 @@
 
 #include "CommonFunc.h"
 #include "BaseObject.h"
+#include <iostream>
 
 #define NUMBER_FRAME 7
 
@@ -22,8 +23,8 @@ public:
 	void handelInputAction(SDL_Event events, SDL_Renderer* screen);
 	void setClips(); // animation
 
-	void doPlayer(Map& map_data);
-	void checkToMap(Map& map_data); // kiem tra va cham voi ban do
+	void doPlayer(Map& map_data, bool *drawedPL);
+	void checkToMap(Map& map_data, bool *drawedPL); // kiem tra va cham voi ban do
 	void setMapXY(const int mapX, int mapY) { map_x = mapX; map_y = mapY; };
 	void centerEntityOnMap(Map &map_data); // tinh toan vi tri ban do
 	bool isDied() { return is_died; };
@@ -31,11 +32,15 @@ public:
 
 	int get_width_frame() const { return width_frame; };
 	int get_height_frame() const { return height_frame; };
+	float getPosX() const { return x_pos - map_x; };
+	float getPosY() const { return y_pos - map_y; };
+	bool isStopping() { return stop; };
 	SDL_Rect getRectFrame() const;
 
 private:
 	float x_val; // do di chuyen sang phai
 	float y_val; // do di chuyen len tren
+	bool stop;
 
 	int money_count;
 
@@ -53,11 +58,10 @@ private:
 	int map_y;
 
 	bool is_died;
-
+	bool leaved; // roi khoi vung dat cu
+	
 	void updateImgPlayer(SDL_Renderer* des);
 };
 
 #endif // !PLAYER_OBJECT_H
-
-
 

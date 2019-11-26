@@ -25,7 +25,6 @@ public:
 	virtual bool loadImg(std::string path, SDL_Renderer* screen); // load image to object
 	void render(SDL_Renderer* des, const SDL_Rect* clip = NULL); // render img to des
 	void free();
-	
 
 protected:
 	SDL_Texture* p_object_; // for saving image

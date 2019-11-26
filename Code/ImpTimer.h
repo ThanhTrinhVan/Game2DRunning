@@ -9,7 +9,7 @@ class ImpTimer
 public:
 	ImpTimer();
 	~ImpTimer();
-
+	
 	void start();
 	void stop();
 	void paused();
@@ -25,5 +25,4 @@ private:
 	bool is_started;
 };
 #endif // !IMP_TIMER_H
-
 

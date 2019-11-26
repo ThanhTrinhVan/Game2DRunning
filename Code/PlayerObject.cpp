@@ -9,6 +9,7 @@ PlayerObject::PlayerObject()
 	y_pos = 0;
 	x_val = 0;
 	y_val = 0;
+	stop = false;
 	width_frame = 0;
 	height_frame = 0;
 	status_ = -1;
@@ -21,6 +22,7 @@ PlayerObject::PlayerObject()
 	map_x = 0;
 	map_y = 0;
 	is_died = false;
+	leaved = false;
 	money_count = 0;
 }
 
@@ -33,7 +35,7 @@ bool PlayerObject::loadImg(std::string path, SDL_Renderer * screen)
 	bool ret = BaseObject::loadImg(path, screen);
 	if (ret == true) {
 		width_frame = rect_.w / NUMBER_FRAME;
-		height_frame = rect_.h;
+		height_frame = 1 * rect_.h;
 	}
 	return ret;
 }
@@ -42,12 +44,13 @@ void PlayerObject::show(SDL_Renderer * des)
 {
 	updateImgPlayer(des);
 
-	if (input_type.left_ == 1 || input_type.right_ == 1) {
+	/*if (input_type.left_ == 1 || input_type.right_ == 1) {
 		frame_id++;
 	}
 	else {
 		frame_id = 0;
-	}
+	}*/
+	frame_id++;
 	if (frame_id >= NUMBER_FRAME)
 		frame_id = 0;
 
@@ -122,21 +125,22 @@ void PlayerObject::setClips()
 	}
 }
 
-void PlayerObject::doPlayer(Map & map_data)
+void PlayerObject::doPlayer(Map & map_data, bool *drawedPL)
 {
-	x_val = 0;
+	x_val = PLAYER_SPEED_X;
 	y_val += PLAYER_SPEED_Y;
 	if (y_val >= MAX_FALL_SPEED) {
 		y_val = MAX_FALL_SPEED;
 	}
 
-	if (input_type.left_ == 1) {
-		x_val -= PLAYER_SPEED_X;
+	if (!stop) {
+		if (input_type.left_ == 1) {
+			x_val -= PLAYER_SPEED_X;
+		}
+		else if (input_type.right_ == 1) {
+			x_val += PLAYER_SPEED_X;
+		}
 	}
-	else if (input_type.right_ == 1) {
-		x_val += PLAYER_SPEED_X;
-	}
-
 	if (input_type.jump_ == 1) {
 		if (on_ground) {
 			y_val = -PLAYER_JUMP;
@@ -145,11 +149,11 @@ void PlayerObject::doPlayer(Map & map_data)
 		input_type.jump_ = 0;
 	}
 
-	checkToMap(map_data);
+	checkToMap(map_data, drawedPL);
 	centerEntityOnMap(map_data);
 }
 
-void PlayerObject::checkToMap(Map & map_data)
+void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 {
 	int x1 = 0, y1 = 0;
 	int x2 = 0, y2 = 0;
@@ -184,7 +188,7 @@ void PlayerObject::checkToMap(Map & map_data)
 		else if (x_val < 0) {
 			int val1 = map_data.tile[y1][x1];
 			int val2 = map_data.tile[y2][x1];
-
+			
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x1] = 0;
 				map_data.tile[y2][x1] = 0;
@@ -246,6 +250,31 @@ void PlayerObject::checkToMap(Map & map_data)
 		}
 	}
 
+	// check vuc tham
+	x2 = (x_pos) / TILE_SIZE;
+	x1 = (x_pos - width_min) / TILE_SIZE;
+	y2 = (y_pos + height_min) / TILE_SIZE + 1;
+	if (map_data.tile[y2][x2] != 2) // roi khoi vung dat cu, 2- la mat dat
+		leaved = true;
+
+	if (leaved && map_data.tile[y2][x2] == 2 && map_data.tile[y2][x1] == BLANK_TILE) {
+		// den vung dat moi
+		*drawedPL = false;
+		leaved = false;
+	}
+	if (!(*drawedPL)) {
+		x2 = (x_pos + width_min) / TILE_SIZE;
+		y2 = (y_pos + height_min) / TILE_SIZE + 1;
+		if (on_ground && map_data.tile[y2][x2] == BLANK_TILE) {
+			x_val = 0;
+			stop = true;
+		}
+		else {
+			stop = false;
+			x_val = PLAYER_SPEED_X;
+		}
+	}
+
 	x_pos += x_val;
 	y_pos += y_val;
 	if (x_pos < 0)
@@ -290,9 +319,9 @@ SDL_Rect PlayerObject::getRectFrame() const
 void PlayerObject::updateImgPlayer(SDL_Renderer * des)
 {
 	if (on_ground == true) {
-		loadImg("E:/nguyen trung kien/7/Game/Ninja/Data/player_run/run1.png", des);
+		loadImg("F:/7th/Software_engineering/game2D/Data/player_run/run.png", des);
 	}
 	else {
-		loadImg("E:/nguyen trung kien/7/Game/Ninja/Data/player_run/jump1.png", des);
+		loadImg("F:/7th/Software_engineering/game2D/Data/player_run/jump.png", des);
 	}
 }

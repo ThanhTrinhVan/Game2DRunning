@@ -49,4 +49,3 @@ private:
 
 #endif // !BIRD_OBJECT_H_
 
-
