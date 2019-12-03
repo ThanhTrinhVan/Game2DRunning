@@ -52,9 +52,13 @@ typedef struct Map {
 
 #define PLAYER_SPEED_Y 0.5
 #define MAX_FALL_SPEED 10
-#define PLAYER_SPEED_X 8
 #define PLAYER_JUMP 17
-
+#define LENGTH_BLOOD_MAX 300
+#define DELTA_BLOOD 30
+#define COEFFICIENT_SPEED 0.5
+extern float PLAYER_SPEED_X;
+extern int Score;
+extern int Blood; // lenght of blood 0 -> LENGTH_BLOOD_MAX
 // cau truc di chuyen cho input
 typedef struct Input {
 	int left_;
@@ -71,7 +75,10 @@ enum TypeMenu {
 	Documentation = 2,
 	Exit = 3,
 	GoToStart = 4,
-	Continue = 5
+	Continue = 5,
+	Level = 6,
+	Beginner = 7,
+	Professional = 8
 };
 
 namespace SDLCommonFunc

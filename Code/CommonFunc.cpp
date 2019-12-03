@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "CommonFunc.h"
 
+float PLAYER_SPEED_X = 5.0;
+int Score = 0;
+int Blood = LENGTH_BLOOD_MAX;
+
 bool SDLCommonFunc::checkCollision(const SDL_Rect & object1, const SDL_Rect & object2)
 {
 	int left_a = object1.x;
@@ -110,6 +114,12 @@ TypeMenu SDLCommonFunc::checkType(std::string txt)
 		return TypeMenu::GoToStart;
 	else if (txt == "Continue")
 		return TypeMenu::Continue;
+	else if (txt == "Beginner")
+		return TypeMenu::Beginner;
+	else if (txt == "Professional")
+		return TypeMenu::Professional;
+	else if (txt == "Level")
+		return TypeMenu::Level;
 	else
 		return TypeMenu::Exit;
 	return TypeMenu::Exit;

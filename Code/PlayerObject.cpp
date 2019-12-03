@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "PlayerObject.h"
 
-
 PlayerObject::PlayerObject()
 {
 	frame_id = 0;
@@ -23,7 +22,6 @@ PlayerObject::PlayerObject()
 	map_y = 0;
 	is_died = false;
 	leaved = false;
-	money_count = 0;
 }
 
 PlayerObject::~PlayerObject()
@@ -127,7 +125,8 @@ void PlayerObject::setClips()
 
 void PlayerObject::doPlayer(Map & map_data, bool *drawedPL)
 {
-	x_val = PLAYER_SPEED_X;
+	x_val = PLAYER_SPEED_X + Score * COEFFICIENT_SPEED;
+	stop = false;
 	y_val += PLAYER_SPEED_Y;
 	if (y_val >= MAX_FALL_SPEED) {
 		y_val = MAX_FALL_SPEED;
@@ -171,17 +170,18 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 			int val1 = map_data.tile[y1][x2];
 			int val2 = map_data.tile[y2][x2];
 
-			// va cham voi o tien, o do se bien mat, gan vao 0
+			// va cham voi o mau, o do se bien mat, gan vao 0
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x2] = 0;
 				map_data.tile[y2][x2] = 0;
-				increaseMoney();
+				increaseBlood();
 			}
 			else {
 				if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
 					x_pos = x2 * TILE_SIZE; // dung tai vi tri x2
 					x_pos -= (width_frame + 1);
 					x_val = 0;
+					stop = true;
 				}
 			}
 		}
@@ -192,12 +192,13 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x1] = 0;
 				map_data.tile[y2][x1] = 0;
-				increaseMoney();
+				increaseBlood();
 			}
 			else {
 				if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
 					x_pos = (x1 + 1) * TILE_SIZE; // dung tai vi tri x1
 					x_val = 0;
+					stop = true;
 				}
 			}
 		}
@@ -216,11 +217,11 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 			int val1 = map_data.tile[y2][x1];
 			int val2 = map_data.tile[y2][x2];
 
-			// va cham voi o tien, o do se bien mat, gan vao 0
+			// va cham voi o mau, o do se bien mat, gan vao 0
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x2] = 0;
 				map_data.tile[y2][x2] = 0;
-				increaseMoney();
+				increaseBlood();
 			}
 			else {
 				if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
@@ -235,11 +236,11 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 			int val1 = map_data.tile[y1][x1];
 			int val2 = map_data.tile[y1][x2];
 
-			// va cham voi o tien, o do se bien mat, gan vao 0
+			// va cham voi o mau, o do se bien mat, gan vao 0
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x2] = 0;
 				map_data.tile[y2][x2] = 0;
-				increaseMoney();
+				increaseBlood();
 			}
 			else {
 				if (val1 != BLANK_TILE || val2 != BLANK_TILE) {
@@ -261,6 +262,7 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 		// den vung dat moi
 		*drawedPL = false;
 		leaved = false;
+		Score++;
 	}
 	if (!(*drawedPL)) {
 		x2 = (x_pos + width_min) / TILE_SIZE;
@@ -270,7 +272,7 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 			stop = true;
 		}
 		else {
-			stop = false;
+			//stop = false;
 			x_val = PLAYER_SPEED_X;
 		}
 	}
@@ -301,9 +303,11 @@ void PlayerObject::centerEntityOnMap(Map & map_data)
 		map_data.start_y = map_data.max_y - SCREEN_HEIGHT;
 }
 
-void PlayerObject::increaseMoney()
+void PlayerObject::increaseBlood()
 {
-	money_count++;
+	Blood += DELTA_BLOOD;
+	if (Blood > LENGTH_BLOOD_MAX)
+		Blood = LENGTH_BLOOD_MAX;
 }
 
 SDL_Rect PlayerObject::getRectFrame() const

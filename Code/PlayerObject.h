@@ -28,7 +28,7 @@ public:
 	void setMapXY(const int mapX, int mapY) { map_x = mapX; map_y = mapY; };
 	void centerEntityOnMap(Map &map_data); // tinh toan vi tri ban do
 	bool isDied() { return is_died; };
-	void increaseMoney();
+	void increaseBlood();
 
 	int get_width_frame() const { return width_frame; };
 	int get_height_frame() const { return height_frame; };
@@ -41,8 +41,6 @@ private:
 	float x_val; // do di chuyen sang phai
 	float y_val; // do di chuyen len tren
 	bool stop;
-
-	int money_count;
 
 	float x_pos;
 	float y_pos;

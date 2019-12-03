@@ -104,6 +104,6 @@ void Menu::setTextItems(std::string * lst)
 		lstItems[i].content.setText(lst[i]);
 		lstItems[i].content.setColor(TextObject::BLUE_TEXT);
 		lstItems[i].content.setRect(lstItems[i].pos.x, lstItems[i].pos.y);
-		lstItems[i].content.setWidth(lstItems[i].length);
+		lstItems[i].content.setSize(lstItems[i].length, 2);
 	}
 }

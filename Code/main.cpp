@@ -12,13 +12,16 @@
 #include "Menu.h"
 #include "PillarObject.h"
 #include <iostream>
+#include <fstream>
 
 #undef main // SDL_main error
 #define NUMBER_BIRD 20
+#define MINUS_BLOOD 1
 
 BaseObject gBackground;
 Menu menu;
 bool menuLoaded = false;
+ImpTimer fpsTime;
 
 // Init enviroment SDL
 bool initData()
@@ -105,13 +108,20 @@ std::vector<BirdObject*> makeBirdList()
 
 int endMenu()
 {
-	menu.setNumItems(3);
-	int px2[3] = { 200, 800, 1100 };
-	int py2[3] = { 200, 200, 550 };
-	int pz2[3] = { 10, 15, 4 };
+	// Load score
+	std::ifstream fileIn;
+	fileIn.open("F:/7th/Software_engineering/game2D/Data/score.txt");
+	int highScore = 0;
+	fileIn >> highScore;
+	fileIn.close();
+	menu.setNumItems(7);
+	int px2[7] = { 100, 900, 1100, 450, 500, 450, 500 };
+	int py2[7] = { 200, 200, 550, 100, 164, 228, 292 };
+	int pz2[7] = { 10, 15, 4, 10, 2, 10, 2 };
 	menu.setPos(px2, py2);
 	menu.setLength(pz2);
-	std::string lstt[3] = { "Play Again", "Go to StartMenu", "Exit" };
+	std::string lstt[7] = { "Play Again", "Go to StartMenu", "Exit", "Your score", std::to_string(Score), 
+		"High score", std::to_string(highScore) };
 	menu.setTextItems(lstt);
 	switch (menu.showMenu(gFont, gScreen[0]))
 	{
@@ -121,15 +131,33 @@ int endMenu()
 		menuLoaded = false;
 		break;
 	case Exit:
+	{
+		if (Score > highScore) {
+			highScore = Score;
+			std::ofstream fileOut;
+			fileOut.open("F:/7th/Software_engineering/game2D/Data/score.txt");
+			fileOut << highScore;
+			fileOut.close();
+		}
+		Score = 0;
+	}
 		return -1;
 		break;
 	default:
 		break;
 	}
+	if (Score > highScore) {
+		highScore = Score;
+		std::ofstream fileOut;
+		fileOut.open("F:/7th/Software_engineering/game2D/Data/score.txt");
+		fileOut << highScore;
+		fileOut.close();
+	}
+	Score = 0;
 	return 0;
 }
 
-int play(ImpTimer &fpsTime)
+int play()
 {
 	if (loadBackGround("F:/7th/Software_engineering/game2D/Data/background.png") == false)
 		return -1;
@@ -149,7 +177,6 @@ int play(ImpTimer &fpsTime)
 	PillarObject pillar;
 
 	bool isQuit = false;
-	unsigned int score = 100;
 	Mix_PlayChannel(-1, gSoundScreen, 1);
 	int stepPillar = 0;
 	bool drawedPl = false;
@@ -172,9 +199,11 @@ int play(ImpTimer &fpsTime)
 		{
 			if (gEvent.type == SDL_QUIT) {
 				isQuit = true;
+				fpsTime.stop();
 			}
 			if (gEvent.type == SDL_KEYDOWN) {
 				if (gEvent.key.keysym.sym == SDLK_p) {
+					fpsTime.paused();
 					SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 					gWindow[1] = SDL_CreateWindow("Pause", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 						400, 300, SDL_WINDOW_SHOWN);
@@ -189,19 +218,20 @@ int play(ImpTimer &fpsTime)
 					std::string lst[2] = { "Continue", "Exit" };
 					PauseMenu.setTextItems(lst);
 					TypeMenu ret1 = PauseMenu.showMenu(gFont, gScreen[1]);
-
 					switch (ret1)
 					{
 					case Continue:
 					{
 						SDL_DestroyWindow(gWindow[1]);
 						SDL_DestroyRenderer(gScreen[1]);
+						fpsTime.continue_();
 					}
 					break;
 					case Exit:
 					{
 						SDL_DestroyWindow(gWindow[1]);
 						SDL_DestroyRenderer(gScreen[1]);
+						fpsTime.stop();
 						return endMenu();
 					}
 					break;
@@ -261,24 +291,36 @@ int play(ImpTimer &fpsTime)
 					bRect.w = p_threat->get_width_frame();
 					bRect.h = p_threat->get_height_frame();
 					if (SDLCommonFunc::checkCollision(pRect, bRect)) {
-						isQuit = true;
-						break;
+						Blood -= (DELTA_BLOOD / 3);
 					}
 				}
 			}
 		}
 
 		// draw text infor
-		std::string txt = "Score: " + std::to_string(score);
-		mark_game.setRect(SCREEN_WIDTH - 3 * TILE_SIZE, 0);
+		std::string txt = "score " + std::to_string(Score);
+		mark_game.setRect(SCREEN_WIDTH - 4 * TILE_SIZE, 0);
+		mark_game.setSize(10, 1);
 		mark_game.setText(txt);
 		mark_game.drawText(gFont, gScreen[0]);
 
-		txt = "Time: " + std::to_string(SDL_GetTicks() / 1000);
-		mark_game.setRect(SCREEN_WIDTH - 3 * TILE_SIZE, TILE_SIZE);
+		txt = "time " + std::to_string(SDL_GetTicks() / 1000);
+		mark_game.setRect(SCREEN_WIDTH - 4 * TILE_SIZE, TILE_SIZE / 2);
+		mark_game.setSize(12, 1);
 		mark_game.setText(txt);
 		mark_game.drawText(gFont, gScreen[0]);
 
+		// blob
+		SDL_SetRenderDrawColor(gScreen[0], (Uint8)255, (Uint8)0, (Uint8)0, 0xFF);
+		SDL_Rect rectBlob = { 0,0,LENGTH_BLOOD_MAX,30 };
+		SDL_RenderDrawRect(gScreen[0], &rectBlob);
+		if (p_player.isStopping()) {
+			Blood -= MINUS_BLOOD;
+		}
+		if (Blood < 0)
+			break;
+		rectBlob = { 0,0, Blood, 30 };
+		SDL_RenderFillRect(gScreen[0], &rectBlob);
 		// update screen
 		SDL_RenderPresent(gScreen[0]);
 
@@ -287,13 +329,14 @@ int play(ImpTimer &fpsTime)
 		if (real_time < time_one_frame)
 			SDL_Delay(time_one_frame - real_time); // uint32 x, neu x < 0 se tu dong chuyen ve 0
 	}
+	fpsTime.stop();
+	Blood = LENGTH_BLOOD_MAX;
 	Mix_HaltChannel(-1);
 	return endMenu();
 }
 
 int main(int argc, char* argv[])
 {
-	ImpTimer fps_time;
     std::cout << "Wellcome to running game!\n"; 
 	if (initData() == false)
 		return 2;
@@ -309,15 +352,14 @@ int main(int argc, char* argv[])
 			menu.setLength(pz);
 			std::string lst[5] = { "Play", "Level", "Instruction", "Documentation", "Exit" };
 			menu.setTextItems(lst);
-			menuLoaded = true;
 			TypeMenu ret = menu.showMenu(gFont, gScreen[0]);
 			switch (ret)
 			{
 			case Exit:
-			{
+				{
 				return 0;
-			}
-			break;
+				}
+				break;
 			case Instruction:
 			{
 				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
@@ -332,7 +374,7 @@ int main(int argc, char* argv[])
 					SDL_DestroyRenderer(gScreen[1]);
 				}
 			}
-			break;
+				break;
 			case Documentation:
 			{
 				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
@@ -347,18 +389,58 @@ int main(int argc, char* argv[])
 					SDL_DestroyRenderer(gScreen[1]);
 				}
 			}
-			break;
+				break;
 			case Play:
 			{
-				int retPlay = play(fps_time);
+				menuLoaded = true;
+				int retPlay = play();
 				if (retPlay == -1)
 					return -1;
 			}
-			break;
+				break;
+			case Level:
+			{
+				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+				gWindow[1] = SDL_CreateWindow("Level", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+					400, 300, SDL_WINDOW_SHOWN);
+				gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
+				Menu tmpMenu;
+				tmpMenu.setNumItems(2);
+				int px[2] = { 50, 50 };
+				int py[2] = { 60, 160 };
+				int pz[2] = { 8, 12 };
+				tmpMenu.setPos(px, py);
+				tmpMenu.setLength(pz);
+				std::string lst[2] = { "Beginner", "Professional" };
+				tmpMenu.setTextItems(lst);
+				tmpMenu.loadImg("F:/7th/Software_engineering/game2D/Data/level.png", gScreen[1]);
+				TypeMenu tmpRet = tmpMenu.showMenu(gFont, gScreen[1]);
+				switch (tmpRet)
+				{
+				case Beginner:
+				{
+					SDL_DestroyWindow(gWindow[1]);
+					SDL_DestroyRenderer(gScreen[1]);
+					PLAYER_SPEED_X = 5.0;
+				}
+				break;
+				case Professional:
+				{
+					SDL_DestroyWindow(gWindow[1]);
+					SDL_DestroyRenderer(gScreen[1]);
+					PLAYER_SPEED_X = 8.0;
+				}
+				break;
+				}
+			}
+				break;
+			default:
+				break;
 			}
 		}
 		else {
-			int retPlay = play(fps_time);
+			menuLoaded = true;
+			int retPlay = play();
 			if (retPlay == -1)
 				return -1;
 		}
