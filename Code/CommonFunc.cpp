@@ -125,3 +125,40 @@ TypeMenu SDLCommonFunc::checkType(std::string txt)
 	return TypeMenu::Exit;
 }
 
+void SDLCommonFunc::playSound(short sound, Mix_Chunk* gSound)
+{
+	switch (sound)
+	{
+	case 1:
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/menu.wav");
+		Mix_PlayChannel(-1, gSound, -1);
+		break;
+
+	case 2:
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/nhac_nen.wav");
+		Mix_PlayChannel(-1, gSound, -1);
+		break;
+
+	case 3:
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/vavaochim.wav");
+		Mix_PlayChannel(-1, gSound, 0);
+		break;
+
+	case 4: //son defaite
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/roixuongnuoc.wav");
+		Mix_PlayChannel(-1, gSound, 0);
+		break;
+	case 5:
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/anmau.wav");
+		Mix_PlayChannel(-1, gSound, 0);
+		break;
+	}
+
+	if (gSound == NULL)
+	{
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Erreur du gestionnaire de son", Mix_GetError(), NULL);
+		exit(EXIT_FAILURE);
+	}
+	return;
+}
+

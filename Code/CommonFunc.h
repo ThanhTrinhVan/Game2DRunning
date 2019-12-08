@@ -86,7 +86,9 @@ namespace SDLCommonFunc
 	bool checkCollision(const SDL_Rect &object1, const SDL_Rect &object2);
 	bool checkFocus(const int &x, const int &y, const SDL_Rect& rect);
 	TypeMenu checkType(std::string txt);
+	void playSound(short sound, Mix_Chunk* gSound);
 }
- 
+
 #endif // ! COMMON_FUNCTION_H_
+
 
