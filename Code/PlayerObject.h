@@ -57,7 +57,7 @@ private:
 
 	bool is_died;
 	bool leaved; // roi khoi vung dat cu
-	
+	Mix_Chunk* gSound;
 	void updateImgPlayer(SDL_Renderer* des);
 };
 

@@ -131,15 +131,6 @@ void PlayerObject::doPlayer(Map & map_data, bool *drawedPL)
 	if (y_val >= MAX_FALL_SPEED) {
 		y_val = MAX_FALL_SPEED;
 	}
-
-	if (!stop) {
-		if (input_type.left_ == 1) {
-			x_val -= PLAYER_SPEED_X;
-		}
-		else if (input_type.right_ == 1) {
-			x_val += PLAYER_SPEED_X;
-		}
-	}
 	if (input_type.jump_ == 1) {
 		if (on_ground) {
 			y_val = -PLAYER_JUMP;
@@ -174,6 +165,7 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x2] = 0;
 				map_data.tile[y2][x2] = 0;
+				SDLCommonFunc::playSound(5, gSound);
 				increaseBlood();
 			}
 			else {
@@ -188,10 +180,11 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 		else if (x_val < 0) {
 			int val1 = map_data.tile[y1][x1];
 			int val2 = map_data.tile[y2][x1];
-			
+
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x1] = 0;
 				map_data.tile[y2][x1] = 0;
+				SDLCommonFunc::playSound(2, gSound);
 				increaseBlood();
 			}
 			else {
@@ -221,6 +214,7 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x2] = 0;
 				map_data.tile[y2][x2] = 0;
+				SDLCommonFunc::playSound(5,gSound);
 				increaseBlood();
 			}
 			else {
@@ -240,6 +234,7 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x2] = 0;
 				map_data.tile[y2][x2] = 0;
+				SDLCommonFunc::playSound(5, gSound);
 				increaseBlood();
 			}
 			else {
@@ -284,7 +279,10 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 	else if (x_pos + width_frame > map_data.max_x)
 		x_pos = map_data.max_x - width_frame - 1;
 	if (y_pos > map_data.max_y)
+	{
+		SDLCommonFunc::playSound(4, gSound);
 		is_died = true;
+	}
 }
 
 void PlayerObject::centerEntityOnMap(Map & map_data)
@@ -323,9 +321,9 @@ SDL_Rect PlayerObject::getRectFrame() const
 void PlayerObject::updateImgPlayer(SDL_Renderer * des)
 {
 	if (on_ground == true) {
-		loadImg("F:/7th/Software_engineering/game2D/Data/player_run/run.png", des);
+		loadImg("E:/nguyen trung kien/7/Game/Data/player_run/run.png", des);
 	}
 	else {
-		loadImg("F:/7th/Software_engineering/game2D/Data/player_run/jump.png", des);
+		loadImg("E:/nguyen trung kien/7/Game/Data/player_run/jump.png", des);
 	}
 }
