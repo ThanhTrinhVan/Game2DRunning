@@ -3,10 +3,13 @@
 #define PILLAR_OBJECT_H
 
 #include "CommonFunc.h"
+#include "BaseObject.h"
 
+#define NUM_STEPS_PILLAR 10
+#define WIDTH_PILLAR 29
 const double pi = acos(-1);
 
-class PillarObject
+class PillarObject : public BaseObject
 {
 public:
 	PillarObject();

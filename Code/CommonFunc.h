@@ -15,7 +15,7 @@ static SDL_Renderer* gScreen[2] = { NULL, NULL };
 static SDL_Event gEvent;
 
 // Audio
-static Mix_Chunk* gSoundScreen = NULL;
+static Mix_Chunk* gSound = NULL;
 
 // font text
 static TTF_Font* gFont = NULL;
@@ -37,8 +37,8 @@ const int RENDER_DRAW_COLOR = 0xff; // 255
 #define BLANK_TILE 0
 #define SUPPORT_TILE 4
 #define TILE_SIZE 64 
-#define MAX_MAP_X 400 // so o tile map trong 1 man hinh nhin duoc
-#define MAX_MAP_Y 10 //
+#define MAX_MAP_X 400 // tong so o tile-map tren truc Ox nam ngang
+#define MAX_MAP_Y 10 // tobg so o tile-map tren truc Oy nam doc
 
 // Map la ban do hien tai chung ta thay
 typedef struct Map {
@@ -88,7 +88,6 @@ namespace SDLCommonFunc
 	TypeMenu checkType(std::string txt);
 	void playSound(short sound, Mix_Chunk* gSound);
 }
-
+ 
 #endif // ! COMMON_FUNCTION_H_
-
 

@@ -22,7 +22,7 @@ BaseObject gBackground;
 Menu menu;
 bool menuLoaded = false;
 ImpTimer fpsTime;
-Mix_Chunk* gSound;
+
 // Init enviroment SDL
 bool initData()
 {
@@ -49,10 +49,14 @@ bool initData()
 			if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
 				return false;
 			}
-			Mix_PlayChannel(-1, gSoundScreen, 1);
+			gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/nhac_nen.wav");
+			if (gSound == NULL) {
+				return false;
+			}
+
 			if (TTF_Init() == -1)
 				return false;
-			gFont = TTF_OpenFont("E:/nguyen trung kien/7/Game/Data/8-BIT WONDER.ttf", 20);
+			gFont = TTF_OpenFont("F:/7th/Software_engineering/game2D/Data/8-BIT WONDER.ttf", 20);
 			if (gFont == NULL)
 				return false;
 		}
@@ -91,7 +95,7 @@ std::vector<BirdObject*> makeBirdList()
 		BirdObject* p_threat = (threatObj + i);
 		if (p_threat != NULL)
 		{
-			p_threat->loadImg("E:/nguyen trung kien/7/Game/Data/threat/bird.png", gScreen[0]);
+			p_threat->loadImg("F:/7th/Software_engineering/game2D/Data/threat/bird.png", gScreen[0]);
 			p_threat->setClips();
 			p_threat->set_x_pos(700 + i * 1200);
 			p_threat->set_y_pos(250);
@@ -105,10 +109,10 @@ std::vector<BirdObject*> makeBirdList()
 int endMenu()
 {
 	// Load score
-	std::ifstream fileIn;
-	fileIn.open("E:/nguyen trung kien/7/Game/Data/score.txt");
-	int highScore = 0;
 	SDLCommonFunc::playSound(1, gSound);
+	std::ifstream fileIn;
+	fileIn.open("F:/7th/Software_engineering/game2D/Data/score.txt");
+	int highScore = 0;
 	fileIn >> highScore;
 	fileIn.close();
 	menu.setNumItems(7);
@@ -117,7 +121,7 @@ int endMenu()
 	int pz2[7] = { 10, 15, 4, 10, 2, 10, 2 };
 	menu.setPos(px2, py2);
 	menu.setLength(pz2);
-	std::string lstt[7] = { "Play Again", "Go to StartMenu", "Exit", "Your score", std::to_string(Score),
+	std::string lstt[7] = { "Play Again", "Go to StartMenu", "Exit", "Your score", std::to_string(Score), 
 		"High score", std::to_string(highScore) };
 	menu.setTextItems(lstt);
 	switch (menu.showMenu(gFont, gScreen[0]))
@@ -132,21 +136,21 @@ int endMenu()
 		if (Score > highScore) {
 			highScore = Score;
 			std::ofstream fileOut;
-			fileOut.open("E:/nguyen trung kien/7/Game/Data/score.txt");
+			fileOut.open("F:/7th/Software_engineering/game2D/Data/score.txt");
 			fileOut << highScore;
 			fileOut.close();
 		}
 		Score = 0;
 	}
-	return -1;
-	break;
+		return -1;
+		break;
 	default:
 		break;
 	}
 	if (Score > highScore) {
 		highScore = Score;
 		std::ofstream fileOut;
-		fileOut.open("E:/nguyen trung kien/7/Game/Data/score.txt");
+		fileOut.open("F:/7th/Software_engineering/game2D/Data/score.txt");
 		fileOut << highScore;
 		fileOut.close();
 	}
@@ -156,15 +160,17 @@ int endMenu()
 
 int play()
 {
-	if (loadBackGround("E:/nguyen trung kien/7/Game/Data/background.png") == false)
+	if (loadBackGround("F:/7th/Software_engineering/game2D/Data/background.png") == false)
 		return -1;
 
+	Mix_HaltChannel(-1);
+	SDLCommonFunc::playSound(2, gSound);
 	GameMap game_map;
-	game_map.loadMap("E:/nguyen trung kien/7/Game/Data/Map_good/map01.dat"); // file luu trang thai ban do
+	game_map.loadMap("F:/7th/Software_engineering/game2D/Data/map_good/map01.dat"); // file luu trang thai ban do
 	game_map.loadTiles(gScreen[0]);
 
 	PlayerObject p_player;
-	p_player.loadImg("E:/nguyen trung kien/7/Game/Data/player_run/run.png", gScreen[0]);
+	p_player.loadImg("F:/7th/Software_engineering/game2D/Data/player_run/run.png", gScreen[0]);
 	p_player.setClips();
 
 	std::vector<BirdObject*> lstBird = makeBirdList();
@@ -172,23 +178,25 @@ int play()
 	mark_game.setColor(TextObject::RED_TEXT);
 
 	PillarObject pillar;
+	pillar.loadImg("F:/7th/Software_engineering/game2D/Data/map_good/pillar.png", gScreen[0]);
 
 	bool isQuit = false;
 	int stepPillar = 0;
 	bool drawedPl = false;
 	int remainH = 0, xTile = 0, yTile = 0, numTiles = 0;
-	Mix_Pause(-1);
-	SDLCommonFunc::playSound(2, gSound);
+	int start_time = SDL_GetTicks();
 	while (!isQuit)
 	{
-		if (p_player.isDied() == true)
+		if (p_player.isDied() == true) {
+			SDL_Delay(3000);
 			break;
+		}
 		fpsTime.start();
 		SDL_SetRenderDrawColor(gScreen[0], RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
 		SDL_RenderClear(gScreen[0]);
 
 		gBackground.render(gScreen[0], NULL);
-
+		
 		Map map_data = game_map.getMap();
 
 		float playerX = p_player.getPosX() + p_player.get_width_frame();
@@ -207,6 +215,7 @@ int play()
 						400, 300, SDL_WINDOW_SHOWN);
 					gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
 					Menu PauseMenu;
+					PauseMenu.loadImg("F:/7th/Software_engineering/game2D/Data/pause.png", gScreen[1]);
 					PauseMenu.setNumItems(2);
 					int px[2] = { 130, 130 };
 					int py[2] = { 160, 60 };
@@ -239,7 +248,9 @@ int play()
 			p_player.handelInputAction(gEvent, gScreen[0]);
 			pillar.handelInputAction(gEvent, gScreen[0], playerX, playerY, p_player.isStopping());
 		}
-		if (pillar.checkReclined() == false && stepPillar < 5) {
+		
+		
+		if (pillar.checkReclined() == false && stepPillar < NUM_STEPS_PILLAR) {
 			stepPillar++;
 			pillar.recline(stepPillar, gScreen[0]);
 		}
@@ -253,24 +264,17 @@ int play()
 				for (int i = 0; i < numTiles; i++) {
 					map_data.tile[yTile][xTile + i] = 10; // o trong co chua hinh ve cay cau
 				}
+				/*SDL_SetRenderDrawColor(gScreen[0], (Uint8)80, (Uint8)80, (Uint8)150, 0xFF);
+				SDL_Rect rect = { pillar.getPosX(), pillar.getPosY() - 20, pillar.getHeight(), 20 };
+				SDL_RenderFillRect(gScreen[0], &rect);*/
 				pillar.reset();
 				drawedPl = true;
 			}
-			/*if (remainH > 0) {
-				int posX = (xTile + numTiles)*TILE_SIZE - map_data.start_x - 10;
-				int posY = (yTile)*TILE_SIZE - map_data.start_y;
-				SDL_SetRenderDrawColor(gScreen[0], (Uint8)80, (Uint8)80, (Uint8)150, 0xFF);
-				SDL_RenderDrawLine(gScreen[0], posX, posY + 20, posX, posY);
-				SDL_RenderDrawLine(gScreen[0], posX, posY + 20, posX + remainH, posY + 20);
-				SDL_RenderDrawLine(gScreen[0], posX, posY, posX + remainH, posY);
-				SDL_RenderDrawLine(gScreen[0], posX + remainH, posY, posX + remainH, posY + 20);
-			}*/
 		}
-
 		p_player.setMapXY(map_data.start_x, map_data.start_y);
 		p_player.doPlayer(map_data, &drawedPl);
 		p_player.show(gScreen[0]);
-
+		
 		game_map.setMap(map_data);
 		game_map.drawMap(gScreen[0]);
 
@@ -303,7 +307,7 @@ int play()
 		mark_game.setText(txt);
 		mark_game.drawText(gFont, gScreen[0]);
 
-		txt = "time " + std::to_string(SDL_GetTicks() / 1000);
+		txt = "time " + std::to_string((SDL_GetTicks() - start_time) / 1000);
 		mark_game.setRect(SCREEN_WIDTH - 4 * TILE_SIZE, TILE_SIZE / 2);
 		mark_game.setSize(12, 1);
 		mark_game.setText(txt);
@@ -320,6 +324,12 @@ int play()
 			break;
 		rectBlob = { 0,0, Blood, 30 };
 		SDL_RenderFillRect(gScreen[0], &rectBlob);
+		if (remainH > 0) {
+			SDL_SetRenderDrawColor(gScreen[0], (Uint8)80, (Uint8)80, (Uint8)150, 0xFF);
+			SDL_Rect rect = { (xTile + numTiles)*TILE_SIZE - map_data.start_x, yTile*TILE_SIZE - map_data.start_y, 
+				remainH, WIDTH_PILLAR };
+			SDL_RenderFillRect(gScreen[0], &rect);
+		}
 		// update screen
 		SDL_RenderPresent(gScreen[0]);
 
@@ -336,11 +346,11 @@ int play()
 
 int main(int argc, char* argv[])
 {
-	std::cout << "Wellcome to running game!\n";
+    std::cout << "Wellcome to running game!\n"; 
 	if (initData() == false)
 		return 2;
 
-	menu.loadImg("E:/nguyen trung kien/7/Game/Data/menu_background.png", gScreen[0]);
+	menu.loadImg("F:/7th/Software_engineering/game2D/Data/menu_background.png", gScreen[0]);
 	SDLCommonFunc::playSound(1, gSound);
 	while (true) {
 		if (!menuLoaded) {
@@ -359,37 +369,37 @@ int main(int argc, char* argv[])
 			{
 				return 0;
 			}
-			break;
+				break;
 			case Instruction:
 			{
 				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 				gWindow[1] = SDL_CreateWindow("Instruction", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-					1280, 640, SDL_WINDOW_SHOWN);
+					SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 				Menu InstrMenu;
 				gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
-				InstrMenu.loadImg("E:/nguyen trung kien/7/Game/Data/Instruction.png", gScreen[1]);
+				InstrMenu.loadImg("F:/7th/Software_engineering/game2D/Data/Instruction.png", gScreen[1]);
 				TypeMenu ret = InstrMenu.showMenu(gFont, gScreen[1]);
 				if (ret == TypeMenu::Exit) {
 					SDL_DestroyWindow(gWindow[1]);
 					SDL_DestroyRenderer(gScreen[1]);
 				}
 			}
-			break;
+				break;
 			case Documentation:
 			{
 				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 				gWindow[1] = SDL_CreateWindow("Documentation", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-					1280, 640, SDL_WINDOW_SHOWN);
+					SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 				Menu DocMenu;
 				gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
-				DocMenu.loadImg("E:/nguyen trung kien/7/Game/Data/Documentation.png", gScreen[1]);
+				DocMenu.loadImg("F:/7th/Software_engineering/game2D/Data/Documentation.png", gScreen[1]);
 				TypeMenu ret = DocMenu.showMenu(gFont, gScreen[1]);
 				if (ret == TypeMenu::Exit) {
 					SDL_DestroyWindow(gWindow[1]);
 					SDL_DestroyRenderer(gScreen[1]);
 				}
 			}
-			break;
+				break;
 			case Play:
 			{
 				menuLoaded = true;
@@ -397,7 +407,7 @@ int main(int argc, char* argv[])
 				if (retPlay == -1)
 					return -1;
 			}
-			break;
+				break;
 			case Level:
 			{
 				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
@@ -413,7 +423,7 @@ int main(int argc, char* argv[])
 				tmpMenu.setLength(pz);
 				std::string lst[2] = { "Beginner", "Professional" };
 				tmpMenu.setTextItems(lst);
-				tmpMenu.loadImg("E:/nguyen trung kien/7/Game/Data/level.png", gScreen[1]);
+				tmpMenu.loadImg("F:/7th/Software_engineering/game2D/Data/level.png", gScreen[1]);
 				TypeMenu tmpRet = tmpMenu.showMenu(gFont, gScreen[1]);
 				switch (tmpRet)
 				{
@@ -430,15 +440,21 @@ int main(int argc, char* argv[])
 					SDL_DestroyRenderer(gScreen[1]);
 					PLAYER_SPEED_X = 8.0;
 				}
-				case TypeMenu::Exit:
+				break;
+				case Exit:
 				{
 					SDL_DestroyWindow(gWindow[1]);
 					SDL_DestroyRenderer(gScreen[1]);
 				}
 				break;
+				default:
+				{
+					SDL_DestroyWindow(gWindow[1]);
+					SDL_DestroyRenderer(gScreen[1]);
+				}
 				}
 			}
-			break;
+				break;
 			default:
 				break;
 			}

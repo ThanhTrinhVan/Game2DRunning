@@ -125,40 +125,41 @@ TypeMenu SDLCommonFunc::checkType(std::string txt)
 	return TypeMenu::Exit;
 }
 
-void SDLCommonFunc::playSound(short sound, Mix_Chunk* gSound)
+void SDLCommonFunc::playSound(short sound, Mix_Chunk * gSound)
 {
+	if (gSound != NULL)
+		gSound = NULL;
 	switch (sound)
 	{
 	case 1:
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/menu.wav");
+		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/menu.wav");
 		Mix_PlayChannel(-1, gSound, -1);
 		break;
 
 	case 2:
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/nhac_nen.wav");
+		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/nhac_nen.wav");
 		Mix_PlayChannel(-1, gSound, -1);
 		break;
 
 	case 3:
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/vavaochim.wav");
+		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/vavaochim.wav");
 		Mix_PlayChannel(-1, gSound, 0);
 		break;
 
 	case 4: //son defaite
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/roixuongnuoc.wav");
+		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/1.wav");
 		Mix_PlayChannel(-1, gSound, 0);
 		break;
 	case 5:
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/anmau.wav");
+		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/an_mau.wav");
 		Mix_PlayChannel(-1, gSound, 0);
 		break;
 	}
 
 	if (gSound == NULL)
 	{
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Erreur du gestionnaire de son", Mix_GetError(), NULL);
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error loading sound!!!", Mix_GetError(), NULL);
 		exit(EXIT_FAILURE);
 	}
 	return;
 }
-

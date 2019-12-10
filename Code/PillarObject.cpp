@@ -5,7 +5,7 @@
 PillarObject::PillarObject()
 {
 	height = 0;
-	width = 20;
+	width = WIDTH_PILLAR;
 	lastHeight = height;
 	posX = 0;
 	posY = 0;
@@ -24,10 +24,8 @@ void PillarObject::draw(int pX, int pY, SDL_Renderer * des)
 	posX = pX - 10;
 	posY = pY;
 	SDL_SetRenderDrawColor(des, (Uint8) 80, (Uint8) 80, (Uint8) 150, 0xFF);
-	SDL_RenderDrawLine(des, posX, posY - height, posX, posY);
-	SDL_RenderDrawLine(des, posX, posY - height, posX + width, posY - height);
-	SDL_RenderDrawLine(des, posX, posY, posX + width, posY);
-	SDL_RenderDrawLine(des, posX + width, posY, posX + width, posY - height);
+	SDL_Rect rect = { posX, posY - height, width, height };
+	SDL_RenderFillRect(des, &rect);
 }
 
 void PillarObject::handelInputAction(SDL_Event events, SDL_Renderer * des, float &px, float &py, bool playerStop)
@@ -46,12 +44,17 @@ void PillarObject::handelInputAction(SDL_Event events, SDL_Renderer * des, float
 
 void PillarObject::recline(const int step, SDL_Renderer * des)
 {
-	double angle = step * pi / (2.0 * 5);
-	SDL_SetRenderDrawColor(des, (Uint8)80, (Uint8)80, (Uint8)150, 0xFF);
+	double angle = step * pi / (2.0 * NUM_STEPS_PILLAR);
+	/*SDL_SetRenderDrawColor(des, (Uint8)80, (Uint8)80, (Uint8)150, 0xFF);
 	SDL_RenderDrawLine(des, posX, posY, posX + height * sin(angle), posY - height * cos(angle));
 	SDL_RenderDrawLine(des, posX, posY, posX + width * cos(angle), posY + width * sin(angle));
 	SDL_RenderDrawLine(des, posX + width * cos(angle), posY + width * sin(angle), posX + height * sin(angle) + width * cos(angle), posY - height * cos(angle) + width * sin(angle));
-	SDL_RenderDrawLine(des, posX + height * sin(angle), posY - height * cos(angle), posX + height * sin(angle) + width * cos(angle), posY - height * cos(angle) + width * sin(angle));
+	SDL_RenderDrawLine(des, posX + height * sin(angle), posY - height * cos(angle), posX + height * sin(angle) + width * cos(angle), posY - height * cos(angle) + width * sin(angle));*/
+	double dx = (height * sin(angle) + width * cos(angle) - width) / 2.0;
+	double dy = (-height * cos(angle) + width * sin(angle) + height) / 2.0;
+	SDL_Rect rect = { posX + dx, posY - height + dy, width, height };
+	angle = step * 90.0 / NUM_STEPS_PILLAR;
+	SDL_RenderCopyEx(des, p_object_, NULL, &rect, angle, NULL, SDL_FLIP_NONE);
 
 	if (step >= 5) {
 		lastHeight = height;

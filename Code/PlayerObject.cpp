@@ -131,11 +131,19 @@ void PlayerObject::doPlayer(Map & map_data, bool *drawedPL)
 	if (y_val >= MAX_FALL_SPEED) {
 		y_val = MAX_FALL_SPEED;
 	}
+	/*if (!stop) {
+		if (input_type.left_ == 1) {
+			x_val -= PLAYER_SPEED_X;
+		}
+		else if (input_type.right_ == 1) {
+			x_val += PLAYER_SPEED_X;
+		}
+	}*/
 	if (input_type.jump_ == 1) {
 		if (on_ground) {
 			y_val = -PLAYER_JUMP;
+			on_ground = false;
 		}
-		on_ground = false;
 		input_type.jump_ = 0;
 	}
 
@@ -153,14 +161,13 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 	x1 = (x_pos + x_val) / TILE_SIZE; // so thu tu cua tile map
 	x2 = (x_pos + x_val + width_frame - 1) / TILE_SIZE;
 	y1 = (y_pos) / TILE_SIZE;
-	y2 = (y_pos + height_min - 1) / TILE_SIZE;
+	y2 = (y_pos + height_min - 1) / TILE_SIZE; 
 
 	if (x1 >= 0 && x2 < MAX_MAP_X && y1 >= 0 && y2 < MAX_MAP_Y) {
 		if (x_val > 0) // chuyen dong sang phai
 		{
 			int val1 = map_data.tile[y1][x2];
 			int val2 = map_data.tile[y2][x2];
-
 			// va cham voi o mau, o do se bien mat, gan vao 0
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x2] = 0;
@@ -180,11 +187,10 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 		else if (x_val < 0) {
 			int val1 = map_data.tile[y1][x1];
 			int val2 = map_data.tile[y2][x1];
-
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x1] = 0;
 				map_data.tile[y2][x1] = 0;
-				SDLCommonFunc::playSound(2, gSound);
+				SDLCommonFunc::playSound(5, gSound);
 				increaseBlood();
 			}
 			else {
@@ -209,12 +215,11 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 		{
 			int val1 = map_data.tile[y2][x1];
 			int val2 = map_data.tile[y2][x2];
-
 			// va cham voi o mau, o do se bien mat, gan vao 0
 			if (val1 == SUPPORT_TILE || val2 == SUPPORT_TILE) {
 				map_data.tile[y1][x2] = 0;
 				map_data.tile[y2][x2] = 0;
-				SDLCommonFunc::playSound(5,gSound);
+				SDLCommonFunc::playSound(5, gSound);
 				increaseBlood();
 			}
 			else {
@@ -253,11 +258,13 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 	if (map_data.tile[y2][x2] != 2) // roi khoi vung dat cu, 2- la mat dat
 		leaved = true;
 
-	if (leaved && map_data.tile[y2][x2] == 2 && map_data.tile[y2][x1] == BLANK_TILE) {
-		// den vung dat moi
-		*drawedPL = false;
-		leaved = false;
-		Score++;
+	if (leaved && map_data.tile[y2][x2] == 2){ //&& map_data.tile[y2][x1] == BLANK_TILE) {
+		if (map_data.tile[y2][x1] == BLANK_TILE || map_data.tile[y2][x1] == 10) {
+			// den vung dat moi
+			*drawedPL = false;
+			leaved = false;
+			Score++;
+		}
 	}
 	if (!(*drawedPL)) {
 		x2 = (x_pos + width_min) / TILE_SIZE;
@@ -278,7 +285,7 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 		x_pos = 0;
 	else if (x_pos + width_frame > map_data.max_x)
 		x_pos = map_data.max_x - width_frame - 1;
-	if (y_pos > map_data.max_y)
+	if (y_pos > map_data.max_y) 
 	{
 		SDLCommonFunc::playSound(4, gSound);
 		is_died = true;
@@ -321,9 +328,9 @@ SDL_Rect PlayerObject::getRectFrame() const
 void PlayerObject::updateImgPlayer(SDL_Renderer * des)
 {
 	if (on_ground == true) {
-		loadImg("E:/nguyen trung kien/7/Game/Data/player_run/run.png", des);
+		loadImg("F:/7th/Software_engineering/game2D/Data/player_run/run.png", des);
 	}
 	else {
-		loadImg("E:/nguyen trung kien/7/Game/Data/player_run/jump.png", des);
+		loadImg("F:/7th/Software_engineering/game2D/Data/player_run/jump.png", des);
 	}
 }
