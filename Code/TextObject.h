@@ -19,8 +19,8 @@ public:
 
 	void setText(const std::string &txt) { textVal = txt; };
 	void setColor(const int &type);
-	void setSize(const int &w, const int &h) { 
-		rect_.w = w * TILE_SIZE / 3; 
+	void setSize(const int &w, const int &h) {
+		rect_.w = w * TILE_SIZE / 3;
 		rect_.h = h * TILE_SIZE / 2;
 	};
 	void drawText(TTF_Font* font, SDL_Renderer* des);

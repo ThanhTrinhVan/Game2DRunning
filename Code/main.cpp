@@ -49,14 +49,14 @@ bool initData()
 			if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
 				return false;
 			}
-			gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/nhac_nen.wav");
+			gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/nhac_nen.wav");
 			if (gSound == NULL) {
 				return false;
 			}
 
 			if (TTF_Init() == -1)
 				return false;
-			gFont = TTF_OpenFont("F:/7th/Software_engineering/game2D/Data/8-BIT WONDER.ttf", 20);
+			gFont = TTF_OpenFont("E:/nguyen trung kien/7/Game/Data/8-BIT WONDER.ttf", 20);
 			if (gFont == NULL)
 				return false;
 		}
@@ -95,7 +95,7 @@ std::vector<BirdObject*> makeBirdList()
 		BirdObject* p_threat = (threatObj + i);
 		if (p_threat != NULL)
 		{
-			p_threat->loadImg("F:/7th/Software_engineering/game2D/Data/threat/bird.png", gScreen[0]);
+			p_threat->loadImg("E:/nguyen trung kien/7/Game/Data/threat/bird.png", gScreen[0]);
 			p_threat->setClips();
 			p_threat->set_x_pos(700 + i * 1200);
 			p_threat->set_y_pos(250);
@@ -111,10 +111,19 @@ int endMenu()
 	// Load score
 	SDLCommonFunc::playSound(1, gSound);
 	std::ifstream fileIn;
-	fileIn.open("F:/7th/Software_engineering/game2D/Data/score.txt");
+	fileIn.open("E:/nguyen trung kien/7/Game/Data/score.txt");
 	int highScore = 0;
 	fileIn >> highScore;
 	fileIn.close();
+
+	if (Score > highScore) {
+		highScore = Score;
+		std::ofstream fileOut;
+		fileOut.open("E:/nguyen trung kien/7/Game/Data/score.txt");
+		fileOut << highScore;
+		fileOut.close();
+	}
+
 	menu.setNumItems(7);
 	int px2[7] = { 100, 900, 1100, 450, 500, 450, 500 };
 	int py2[7] = { 200, 200, 550, 100, 164, 228, 292 };
@@ -124,6 +133,7 @@ int endMenu()
 	std::string lstt[7] = { "Play Again", "Go to StartMenu", "Exit", "Your score", std::to_string(Score), 
 		"High score", std::to_string(highScore) };
 	menu.setTextItems(lstt);
+	Score = 0;
 	switch (menu.showMenu(gFont, gScreen[0]))
 	{
 	case Play:
@@ -132,45 +142,27 @@ int endMenu()
 		menuLoaded = false;
 		break;
 	case Exit:
-	{
-		if (Score > highScore) {
-			highScore = Score;
-			std::ofstream fileOut;
-			fileOut.open("F:/7th/Software_engineering/game2D/Data/score.txt");
-			fileOut << highScore;
-			fileOut.close();
-		}
-		Score = 0;
-	}
 		return -1;
 		break;
 	default:
 		break;
 	}
-	if (Score > highScore) {
-		highScore = Score;
-		std::ofstream fileOut;
-		fileOut.open("F:/7th/Software_engineering/game2D/Data/score.txt");
-		fileOut << highScore;
-		fileOut.close();
-	}
-	Score = 0;
 	return 0;
 }
 
 int play()
 {
-	if (loadBackGround("F:/7th/Software_engineering/game2D/Data/background.png") == false)
+	if (loadBackGround("E:/nguyen trung kien/7/Game/Data/background.png") == false)
 		return -1;
 
 	Mix_HaltChannel(-1);
 	SDLCommonFunc::playSound(2, gSound);
 	GameMap game_map;
-	game_map.loadMap("F:/7th/Software_engineering/game2D/Data/map_good/map01.dat"); // file luu trang thai ban do
+	game_map.loadMap("E:/nguyen trung kien/7/Game/Data/map_good/map01.dat"); // file luu trang thai ban do
 	game_map.loadTiles(gScreen[0]);
 
 	PlayerObject p_player;
-	p_player.loadImg("F:/7th/Software_engineering/game2D/Data/player_run/run.png", gScreen[0]);
+	p_player.loadImg("E:/nguyen trung kien/7/Game/Data/player_run/run.png", gScreen[0]);
 	p_player.setClips();
 
 	std::vector<BirdObject*> lstBird = makeBirdList();
@@ -178,7 +170,7 @@ int play()
 	mark_game.setColor(TextObject::RED_TEXT);
 
 	PillarObject pillar;
-	pillar.loadImg("F:/7th/Software_engineering/game2D/Data/map_good/pillar.png", gScreen[0]);
+	pillar.loadImg("E:/nguyen trung kien/7/Game/Data/map_good/pillar.png", gScreen[0]);
 
 	bool isQuit = false;
 	int stepPillar = 0;
@@ -215,7 +207,7 @@ int play()
 						400, 300, SDL_WINDOW_SHOWN);
 					gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
 					Menu PauseMenu;
-					PauseMenu.loadImg("F:/7th/Software_engineering/game2D/Data/pause.png", gScreen[1]);
+					PauseMenu.loadImg("E:/nguyen trung kien/7/Game/Data/pause.png", gScreen[1]);
 					PauseMenu.setNumItems(2);
 					int px[2] = { 130, 130 };
 					int py[2] = { 160, 60 };
@@ -350,7 +342,7 @@ int main(int argc, char* argv[])
 	if (initData() == false)
 		return 2;
 
-	menu.loadImg("F:/7th/Software_engineering/game2D/Data/menu_background.png", gScreen[0]);
+	menu.loadImg("E:/nguyen trung kien/7/Game/Data/menu_background.png", gScreen[0]);
 	SDLCommonFunc::playSound(1, gSound);
 	while (true) {
 		if (!menuLoaded) {
@@ -377,7 +369,7 @@ int main(int argc, char* argv[])
 					SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 				Menu InstrMenu;
 				gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
-				InstrMenu.loadImg("F:/7th/Software_engineering/game2D/Data/Instruction.png", gScreen[1]);
+				InstrMenu.loadImg("E:/nguyen trung kien/7/Game/Data/Instruction.png", gScreen[1]);
 				TypeMenu ret = InstrMenu.showMenu(gFont, gScreen[1]);
 				if (ret == TypeMenu::Exit) {
 					SDL_DestroyWindow(gWindow[1]);
@@ -392,7 +384,7 @@ int main(int argc, char* argv[])
 					SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 				Menu DocMenu;
 				gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
-				DocMenu.loadImg("F:/7th/Software_engineering/game2D/Data/Documentation.png", gScreen[1]);
+				DocMenu.loadImg("E:/nguyen trung kien/7/Game/Data/Documentation.png", gScreen[1]);
 				TypeMenu ret = DocMenu.showMenu(gFont, gScreen[1]);
 				if (ret == TypeMenu::Exit) {
 					SDL_DestroyWindow(gWindow[1]);
@@ -423,7 +415,7 @@ int main(int argc, char* argv[])
 				tmpMenu.setLength(pz);
 				std::string lst[2] = { "Beginner", "Professional" };
 				tmpMenu.setTextItems(lst);
-				tmpMenu.loadImg("F:/7th/Software_engineering/game2D/Data/level.png", gScreen[1]);
+				tmpMenu.loadImg("E:/nguyen trung kien/7/Game/Data/level.png", gScreen[1]);
 				TypeMenu tmpRet = tmpMenu.showMenu(gFont, gScreen[1]);
 				switch (tmpRet)
 				{

@@ -9,7 +9,7 @@ class ImpTimer
 public:
 	ImpTimer();
 	~ImpTimer();
-	
+
 	void start();
 	void stop();
 	void paused();

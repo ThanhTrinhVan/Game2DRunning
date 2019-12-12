@@ -77,7 +77,7 @@ TypeMenu Menu::showMenu(TTF_Font * font, SDL_Renderer * des)
 		// update screen
 		SDL_RenderPresent(des);
 	}
-	
+
 	return TypeMenu::Exit;
 }
 

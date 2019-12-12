@@ -258,24 +258,25 @@ void PlayerObject::checkToMap(Map & map_data, bool* drawedPL)
 	if (map_data.tile[y2][x2] != 2) // roi khoi vung dat cu, 2- la mat dat
 		leaved = true;
 
-	if (leaved && map_data.tile[y2][x2] == 2){ //&& map_data.tile[y2][x1] == BLANK_TILE) {
+	if (leaved && map_data.tile[y2][x2] == 2) { //&& map_data.tile[y2][x1] == BLANK_TILE) {
+		*drawedPL = false;
+		leaved = false;
 		if (map_data.tile[y2][x1] == BLANK_TILE || map_data.tile[y2][x1] == 10) {
 			// den vung dat moi
-			*drawedPL = false;
-			leaved = false;
 			Score++;
 		}
 	}
 	if (!(*drawedPL)) {
 		x2 = (x_pos + width_min) / TILE_SIZE;
+		x1 = x_pos / TILE_SIZE;
 		y2 = (y_pos + height_min) / TILE_SIZE + 1;
-		if (on_ground && map_data.tile[y2][x2] == BLANK_TILE) {
+		if (on_ground && map_data.tile[y2][x2] == BLANK_TILE && map_data.tile[y2][x1] == 2) {
 			x_val = 0;
 			stop = true;
 		}
 		else {
 			//stop = false;
-			x_val = PLAYER_SPEED_X;
+			x_val = PLAYER_SPEED_X + Score * COEFFICIENT_SPEED;
 		}
 	}
 
@@ -328,9 +329,9 @@ SDL_Rect PlayerObject::getRectFrame() const
 void PlayerObject::updateImgPlayer(SDL_Renderer * des)
 {
 	if (on_ground == true) {
-		loadImg("F:/7th/Software_engineering/game2D/Data/player_run/run.png", des);
+		loadImg("E:/nguyen trung kien/7/Game/Data/player_run/run.png", des);
 	}
 	else {
-		loadImg("F:/7th/Software_engineering/game2D/Data/player_run/jump.png", des);
+		loadImg("E:/nguyen trung kien/7/Game/Data/player_run/jump.png", des);
 	}
 }

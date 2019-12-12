@@ -132,26 +132,26 @@ void SDLCommonFunc::playSound(short sound, Mix_Chunk * gSound)
 	switch (sound)
 	{
 	case 1:
-		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/menu.wav");
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/menu.wav");
 		Mix_PlayChannel(-1, gSound, -1);
 		break;
 
 	case 2:
-		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/nhac_nen.wav");
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/nhac_nen.wav");
 		Mix_PlayChannel(-1, gSound, -1);
 		break;
 
 	case 3:
-		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/vavaochim.wav");
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/vavaochim.wav");
 		Mix_PlayChannel(-1, gSound, 0);
 		break;
 
 	case 4: //son defaite
-		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/1.wav");
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/1.wav");
 		Mix_PlayChannel(-1, gSound, 0);
 		break;
 	case 5:
-		gSound = Mix_LoadWAV("F:/7th/Software_engineering/game2D/Data/audio/an_mau.wav");
+		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/an_mau.wav");
 		Mix_PlayChannel(-1, gSound, 0);
 		break;
 	}
