@@ -1,9 +1,13 @@
-#include "pch.h"
 #include "CommonFunc.h"
+
+SDL_Window* gWindow[2] = { NULL, NULL };
+SDL_Renderer* gScreen[2] = { NULL, NULL };
+TTF_Font* gFont = NULL;
 
 float PLAYER_SPEED_X = 5.0;
 int Score = 0;
 int Blood = LENGTH_BLOOD_MAX;
+
 
 bool SDLCommonFunc::checkCollision(const SDL_Rect & object1, const SDL_Rect & object2)
 {
@@ -125,33 +129,33 @@ TypeMenu SDLCommonFunc::checkType(std::string txt)
 	return TypeMenu::Exit;
 }
 
-void SDLCommonFunc::playSound(short sound, Mix_Chunk * gSound)
+void SDLCommonFunc::playSound(short typeSound, Mix_Chunk * gSound)
 {
 	if (gSound != NULL)
 		gSound = NULL;
-	switch (sound)
+	switch (typeSound)
 	{
 	case 1:
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/menu.wav");
+		gSound = Mix_LoadWAV("./Data/audio/menu.wav");
 		Mix_PlayChannel(-1, gSound, -1);
 		break;
 
 	case 2:
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/nhac_nen.wav");
+		gSound = Mix_LoadWAV("./Data/audio/nhac_nen.wav");
 		Mix_PlayChannel(-1, gSound, -1);
 		break;
 
 	case 3:
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/vavaochim.wav");
+		gSound = Mix_LoadWAV("./Data/audio/vavaochim.wav");
 		Mix_PlayChannel(-1, gSound, 0);
 		break;
 
-	case 4: //son defaite
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/1.wav");
+	case 4:
+		gSound = Mix_LoadWAV("./Data/audio/roixuongvuc.wav");
 		Mix_PlayChannel(-1, gSound, 0);
 		break;
 	case 5:
-		gSound = Mix_LoadWAV("E:/nguyen trung kien/7/Game/Data/audio/an_mau.wav");
+		gSound = Mix_LoadWAV("./Data/audio/an_mau.wav");
 		Mix_PlayChannel(-1, gSound, 0);
 		break;
 	}

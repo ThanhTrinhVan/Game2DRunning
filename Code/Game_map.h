@@ -5,8 +5,9 @@
 #include "CommonFunc.h"
 #include "BaseObject.h"
 
-#define MAX_TILES 20
+#define MAX_TILES_ONSCREEN 20 // SCREEN_WIDTH / TILE_SIZE
 
+// Quan ly moi mot TILE ve hinh anh va vi tri render
 class TileMat : public BaseObject
 {
 public:
@@ -14,7 +15,7 @@ public:
 	~TileMat() { ; }
 };
 
-// fill tile to struct map
+// Quan ly toan bo map ( man hinh render truoc + hien tai + sau )
 class GameMap
 {
 public:
@@ -24,12 +25,12 @@ public:
 	void loadMap(const char* name);
 	void loadTiles(SDL_Renderer* screen);
 	void drawMap(SDL_Renderer* screen);
-	void setMap(Map& map_data) { game_map_ = map_data; };
-	Map getMap() const { return game_map_; };
+
+	void setMap(Map& map_data) { game_map = map_data; };
+	Map getMap() const { return game_map; };
 private:
-	Map game_map_; // toan bo map
-	TileMat tileMat[MAX_TILES]; // man hinh hien tai
+	Map game_map;						 // quan ly toan bo ban do
+	TileMat tileMat[MAX_TILES_ONSCREEN]; // mang cac TILE cua man hinh render hien tai
 };
 
 #endif // !GAME_MAP_H
-

@@ -4,6 +4,7 @@
 
 #include "CommonFunc.h"
 
+// Tinh toan thoi gian render cua toan bo screen, xac dinh thoi gian delay de dam bao fps
 class ImpTimer
 {
 public:
@@ -24,5 +25,6 @@ private:
 	bool is_paused;
 	bool is_started;
 };
+
 #endif // !IMP_TIMER_H
 

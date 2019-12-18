@@ -4,7 +4,7 @@
 
 #include "CommonFunc.h"
 
-// base class for loading image and render image on dst
+// Khoi tao cac phuong thuc load va render anh, dung de xay dung cac class cu the sau
 class BaseObject
 {
 public:
@@ -19,16 +19,16 @@ public:
 		return rect_;
 	}
 	SDL_Texture* getObject() const {
-		return p_object_;
+		return p_object;
 	}
 
-	virtual bool loadImg(std::string path, SDL_Renderer* screen); // load image to object
-	void render(SDL_Renderer* des, const SDL_Rect* clip = NULL); // render img to des
-	void free();
+	virtual bool loadImg(std::string path, SDL_Renderer* screen); // tai anh va luu vao p_object_
+	void render(SDL_Renderer* des, const SDL_Rect* clip = NULL);  // render p_object_ len des
+	void free();												  // giai phong bo nho
 
 protected:
-	SDL_Texture* p_object_; // for saving image
-	SDL_Rect rect_;// for saving size of img, which you load in function loadImg
+	SDL_Texture* p_object; // luu buc anh hien tai cua doi tuong
+	SDL_Rect	 rect_;     // luu kich thuoc va toa do cua p_object_
 };
 
-#endif // ! BASE_OBJECT_H_
+#endif // !BASE_OBJECT_H_

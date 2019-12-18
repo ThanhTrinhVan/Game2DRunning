@@ -1,9 +1,9 @@
 #pragma once
-#ifndef BIRD_OBJECT_H_
-#define BIRD_OBJECT_H_
+#ifndef BIRD_OBJECT_H
+#define BIRD_OBJECT_H
+
 #include "CommonFunc.h"
 #include "BaseObject.h"
-#include <iostream>
 
 #define FRAME_NUM 8
 #define BIRD_SPEED_Y 0.5
@@ -32,21 +32,17 @@ public:
 	int get_height_frame() const { return frame_height; };
 
 	void doBird(Map& gMap);
-	void checkToMap(Map& gMap);
 
 private:
-	int map_x; // thiet lap map de hien thi
+	int map_x;						// Vi tri cua ban do hien tai trong mang ban do
 	int map_y;
-	float x_pos;// vi tri
+	float x_pos;					// Vi tri cua chim
 	float y_pos;
-	float x_val;// toc do di chuyen
+	float x_val;					// Toc do di chuyen
 	float y_val;
-	SDL_Rect frame_clip[FRAME_NUM];
-	int frame_width;
+	SDL_Rect frame_clip[FRAME_NUM];	// Cac khung hinh 
+	int frame_width;				// Kich thuoc 1 khung hinh
 	int frame_height;
-	int frame_id;
+	int frame_id;					// Chi so cua khung hinh hien tai
 };
-
-#endif // !BIRD_OBJECT_H_
-
-
+#endif // !BIRD_OBJECT_H

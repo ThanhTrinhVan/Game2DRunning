@@ -4,14 +4,13 @@
 
 #include "CommonFunc.h"
 #include "BaseObject.h"
-#include <string>
 
 class TextObject : public BaseObject
 {
 public:
 	enum TextColor {
 		RED_TEXT = 0,
-		WHILE_TEXT = 1,
+		WHITE_TEXT = 1,
 		BLUE_TEXT = 2
 	};
 	TextObject();
@@ -31,3 +30,4 @@ private:
 	SDL_Color textColor;
 };
 #endif // !TEXT_OBJECT_H
+

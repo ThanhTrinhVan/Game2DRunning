@@ -5,8 +5,8 @@
 #include "CommonFunc.h"
 #include "BaseObject.h"
 
-#define NUM_STEPS_PILLAR 10
-#define WIDTH_PILLAR 29
+#define NUM_RECLINE_STEPS 10
+const int WIDTH_PILLAR = 29;
 const double pi = acos(-1);
 
 class PillarObject : public BaseObject
@@ -16,8 +16,8 @@ public:
 	~PillarObject();
 
 	void handelInputAction(SDL_Event events, SDL_Renderer * des, float &px, float &py, bool playerStop);
-	void recline(const int step, SDL_Renderer* des);
-	bool checkReclined() { return reclined; };
+	void recline(const int step, SDL_Renderer* des);	// Hien thi cay cau dang nga xuong theo tung buoc
+	bool isReclined() { return reclined; };
 	void setReclined(bool sts) { reclined = sts; };
 
 	int getHeight() { return lastHeight; };
@@ -26,11 +26,9 @@ public:
 	void reset();
 
 private:
-	int height, width, lastHeight;
+	int height, lastHeight;
 	int posX, posY;
 	bool reclined;
-	void draw(int pX, int pY, SDL_Renderer* des);
+	void draw(int pX, int pY, SDL_Renderer* des);		// Hien thi xay dung cay cau
 };
-
 #endif // !PILLAR_OBJECT_H
-
