@@ -29,52 +29,54 @@ TypeMenu Menu::showMenu(TTF_Font * font, SDL_Renderer * des)
 		render(des, NULL);
 
 		while (SDL_PollEvent(&gEvent) != 0) {
-			switch (gEvent.type)
-			{
-			case SDL_QUIT:
+			if (gEvent.type == SDL_WINDOWEVENT && gEvent.window.event == SDL_WINDOWEVENT_CLOSE) {
 				return TypeMenu::Exit;
-				break;
-			case SDL_MOUSEMOTION:
-			{
-				x_mouse = gEvent.motion.x;
-				y_mouse = gEvent.motion.y;
-				for (int i = 0; i < numItems; i++) {
-					if (SDLCommonFunc::checkFocus(x_mouse, y_mouse, lstItems[i].content.getRect())) {
-						if (lstItems[i].selected == false) {
-							lstItems[i].selected = true;
-							lstItems[i].content.setColor(TextObject::RED_TEXT);
+			}
+			else {
+				switch (gEvent.type)
+				{
+				case SDL_MOUSEMOTION:
+				{
+					x_mouse = gEvent.motion.x;
+					y_mouse = gEvent.motion.y;
+					for (int i = 0; i < numItems; i++) {
+						if (SDLCommonFunc::checkFocus(x_mouse, y_mouse, lstItems[i].content.getRect())) {
+							if (lstItems[i].selected == false) {
+								lstItems[i].selected = true;
+								lstItems[i].content.setColor(TextObject::RED_TEXT);
+							}
 						}
-					}
-					else {
-						if (lstItems[i].selected == true) {
-							lstItems[i].selected = false;
-							lstItems[i].content.setColor(TextObject::BLUE_TEXT);
+						else {
+							if (lstItems[i].selected == true) {
+								lstItems[i].selected = false;
+								lstItems[i].content.setColor(TextObject::BLUE_TEXT);
+							}
 						}
 					}
 				}
-			}
 				break;
-			case SDL_MOUSEBUTTONDOWN:
-			{
-				x_mouse = gEvent.motion.x; 
-				y_mouse = gEvent.motion.y;
-				for (int i = 0; i < numItems; i++) {
-					if (SDLCommonFunc::checkFocus(x_mouse, y_mouse, lstItems[i].content.getRect())) {
-						if (lstItems[i].selected == true) {
-							lstItems[i].selected = false;
-							lstItems[i].content.setColor(TextObject::BLUE_TEXT);
+				case SDL_MOUSEBUTTONDOWN:
+				{
+					x_mouse = gEvent.motion.x;
+					y_mouse = gEvent.motion.y;
+					for (int i = 0; i < numItems; i++) {
+						if (SDLCommonFunc::checkFocus(x_mouse, y_mouse, lstItems[i].content.getRect())) {
+							if (lstItems[i].selected == true) {
+								lstItems[i].selected = false;
+								lstItems[i].content.setColor(TextObject::BLUE_TEXT);
+							}
+							return SDLCommonFunc::checkType(lstItems[i].content.getText());
 						}
-						return SDLCommonFunc::checkType(lstItems[i].content.getText());
 					}
 				}
-			}
 				break;
-			case SDL_KEYDOWN:
-				if (gEvent.key.keysym.sym == SDLK_ESCAPE)
-					return TypeMenu::Exit;
-				break;
-			default:
-				break;
+				case SDL_KEYDOWN:
+					if (gEvent.key.keysym.sym == SDLK_ESCAPE)
+						return TypeMenu::Exit;
+					break;
+				default:
+					break;
+				}
 			}
 		}
 		
