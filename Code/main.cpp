@@ -135,6 +135,7 @@ int endMenu()
 		return -1;
 		break;
 	default:
+		menuLoaded = false;
 		break;
 	}
 	return 0;
@@ -253,7 +254,7 @@ int play()
 			stepRecline = 0;
 			if (pillar->getHeight() > 0) {
 				numTiles = pillar->getHeight() / TILE_SIZE;
-				if (numTiles <= defaultLength)
+				if (numTiles <= defaultLength && numTiles >= (defaultLength - 1))
 					Score++;
 				remainLength = pillar->getHeight() - numTiles * TILE_SIZE;
 				xTile = (playerPos[0] + map_data.start_x) / TILE_SIZE;
@@ -371,9 +372,10 @@ int main(int argc, char* argv[])
 				break;
 			case TypeMenu::Instruction:
 			{
+				//SDL_Init(SDL_INIT_VIDEO);
 				//SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 				gWindow[1] = SDL_CreateWindow("Instruction", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-					SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+					SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 				gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
 				subMenu = new Menu();
 				subMenu->loadImg("./Data/Instruction.png", gScreen[1]);
@@ -381,13 +383,14 @@ int main(int argc, char* argv[])
 					SDL_DestroyWindow(gWindow[1]);
 					SDL_DestroyRenderer(gScreen[1]);
 					delete subMenu;
+					IMG_Quit();
 				}
 			}
 				break;
 			case TypeMenu::Documentation:
 			{
 				gWindow[1] = SDL_CreateWindow("Documentation", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-					SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+					SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 				gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
 				subMenu = new Menu();
 				subMenu->loadImg("./Data/Documentation.png", gScreen[1]);
@@ -401,7 +404,7 @@ int main(int argc, char* argv[])
 			case TypeMenu::Level:
 			{
 				gWindow[1] = SDL_CreateWindow("Game Level", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-					400, 300, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+					400, 300, SDL_WINDOW_SHOWN);
 				gScreen[1] = SDL_CreateRenderer(gWindow[1], -1, SDL_RENDERER_ACCELERATED);
 				subMenu = new Menu();
 				subMenu->loadImg("./Data/level.png", gScreen[1]);

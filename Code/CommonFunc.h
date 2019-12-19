@@ -75,7 +75,8 @@ enum TypeMenu {
 	Continue = 5,
 	Level = 6,
 	Beginner = 7,
-	Professional = 8
+	Professional = 8,
+	Nothing = 9
 };
 
 namespace SDLCommonFunc

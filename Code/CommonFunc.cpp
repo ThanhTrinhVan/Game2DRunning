@@ -125,8 +125,8 @@ TypeMenu SDLCommonFunc::checkType(std::string txt)
 	else if (txt == "Level")
 		return TypeMenu::Level;
 	else
-		return TypeMenu::Exit;
-	return TypeMenu::Exit;
+		return TypeMenu::Nothing;
+	return TypeMenu::Nothing;
 }
 
 void SDLCommonFunc::playSound(short typeSound, Mix_Chunk * gSound)
