@@ -1,3 +1,5 @@
+#undef main // SDL_main error
+
 #include "CommonFunc.h"
 #include "BaseObject.h"
 #include "ImpTimer.h"
@@ -11,9 +13,10 @@
 #include <iostream>
 #include <fstream>
 
-#undef main // SDL_main error
 #define NUMBER_BIRD 20
 #define MINUS_BLOOD 1
+
+using namespace std;
 
 BaseObject gBackground;
 TextObject drawText;
@@ -21,44 +24,6 @@ Menu menuGame;
 bool menuLoaded = false;
 
 // Khoi tao
-bool initData()
-{
-	bool success = true;
-	int ret = SDL_Init(SDL_INIT_VIDEO);
-	if (ret < 0)
-		return false;
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-	gWindow[0] = SDL_CreateWindow("Running game2D", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (gWindow[0] == NULL)
-		return false;
-	else {
-		gScreen[0] = SDL_CreateRenderer(gWindow[0], -1, SDL_RENDERER_ACCELERATED);
-		if (gScreen[0] == NULL)
-			return false;
-		else {
-			SDL_SetRenderDrawColor(gScreen[0], RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
-			if (!(IMG_Init(IMG_INIT_PNG) && IMG_INIT_PNG))
-				success = false;
-
-			if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
-				return false;
-			}
-			gSound = Mix_LoadWAV("./Data/audio/nhac_nen.wav");
-			if (gSound == NULL) {
-				return false;
-			}
-
-			if (TTF_Init() == -1)
-				return false;
-			gFont = TTF_OpenFont("./Data/8-BIT WONDER.ttf", 20);
-			if (gFont == NULL)
-				return false;
-		}
-	}
-	return success;
-}
-
 bool loadBackGround(std::string path)
 {
 	if (!gBackground.loadImg(path, gScreen[0]))
@@ -115,12 +80,12 @@ int endMenu()
 	}
 
 	menuGame.setNumItems(7);
-	int px[7] = { 100, 900, 1100, 450, 500, 450, 500 };
-	int py[7] = { 200, 200, 550, 100, 164, 228, 292 };
-	int pz[7] = { 10, 15, 4, 10, 2, 10, 2 };
+	vector<int> px{ 100, 900, 1100, 450, 500, 450, 500 };
+	vector<int> py{ 200, 200, 550, 100, 164, 228, 292 };
+	vector<int> pz{ 10, 15, 4, 10, 2, 10, 2 };
 	menuGame.setPos(px, py);
 	menuGame.setLength(pz);
-	std::string lstItems[7] = { "Play Again", "Go to StartMenu", "Exit", "Your score", std::to_string(Score),
+	vector<std::string> lstItems{ "Play Again", "Go to StartMenu", "Exit", "Your score", std::to_string(Score),
 		"High score", std::to_string(highScore) };
 	menuGame.setTextItems(lstItems);
 	Score = 0;
@@ -203,10 +168,10 @@ int play()
 					Menu* subMenu = new Menu();
 					subMenu->loadImg("./Data/pause.png", gScreen[1]);
 					subMenu->setNumItems(2);
-					int px[2] = { 130, 130 };
-					int py[2] = { 160, 60 };
-					int pz[2] = { 8, 4 };
-					std::string lstItem[2] = { "Continue", "Exit" };
+					vector<int> px{ 130, 130 };
+					vector<int> py{ 160, 60 };
+					vector<int> pz{ 8, 4 };
+					vector<std::string> lstItem{ "Continue", "Exit" };
 					subMenu->setPos(px, py);
 					subMenu->setLength(pz);
 					subMenu->setTextItems(lstItem);
@@ -283,7 +248,7 @@ int play()
 			BirdObject* threat = lstBirds.at(i);
 			if (threat != NULL) {
 				threat->setMapXY(map_data.start_x, map_data.start_y);
-				threat->doBird(map_data);
+				threat->doBird();
 				if (threat->get_x_pos() > map_data.start_x) {
 					threat->show(gScreen[0]);
 					SDL_Rect bRect = { threat->getRect().x, threat->getRect().y, threat->get_width_frame(), threat->get_height_frame() };
@@ -350,12 +315,12 @@ int main(int argc, char* argv[])
 	while (true) {
 		if (!menuLoaded) {
 			menuGame.setNumItems(5);
-			int px[5] = { 200, 200, 800, 800, 1100 };
-			int py[5] = { 200, 300, 200, 300, 550 };
-			int pz[5] = { 4,5,11,13,4 };
+			vector<int> px{ 200, 200, 800, 800, 1100 };
+			vector<int> py{ 200, 300, 200, 300, 550 };
+			vector<int> pz{ 4,5,11,13,4 };
 			menuGame.setPos(px, py);
 			menuGame.setLength(pz);
-			std::string lstItem[5] = { "Play", "Level", "Instruction", "Documentation", "Exit" };
+			vector<std::string> lstItem{ "Play", "Level", "Instruction", "Documentation", "Exit" };
 			menuGame.setTextItems(lstItem);
 			
 			switch (menuGame.showMenu(gFont, gScreen[0]))
@@ -409,13 +374,13 @@ int main(int argc, char* argv[])
 				subMenu = new Menu();
 				subMenu->loadImg("./Data/level.png", gScreen[1]);
 				subMenu->setNumItems(2);
-				px[0] = 50; px[1] = 50;
-				py[0] = 60; py[1] = 160;
-				pz[0] = 8;  pz[1] = 12;
-				lstItem[0] = "Beginner"; lstItem[1] = "Professional";
-				subMenu->setPos(px, py);
-				subMenu->setLength(pz);
-				subMenu->setTextItems(lstItem);
+				vector<int> px1{ 50, 50 };
+				vector<int> py1{ 60, 160 };
+				vector<int> pz1{ 8, 12 };
+				vector<std::string> lstItem1{ "Beginner", "Professional" };
+				subMenu->setPos(px1, py1);
+				subMenu->setLength(pz1);
+				subMenu->setTextItems(lstItem1);
 				switch (subMenu->showMenu(gFont, gScreen[1]))
 				{
 				case TypeMenu::Beginner:

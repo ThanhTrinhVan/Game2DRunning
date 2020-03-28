@@ -51,7 +51,7 @@ void BirdObject::show(SDL_Renderer * des)
 	SDL_RenderCopy(des, p_object, currentClip, &rendQuad);
 }
 
-void BirdObject::doBird(Map & gMap)
+void BirdObject::doBird()
 {
 	x_val = BIRD_SPEED_X;
 	y_val = 0;

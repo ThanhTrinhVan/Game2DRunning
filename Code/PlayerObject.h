@@ -19,12 +19,23 @@ public:
 	void setClips();												// Phan chia frame de tao hieu ung dong
 
 	void doPlayer(Map& map_data, bool *connected);					// hanh dong cua nhan vat 
-	void checkToMap(Map& map_data, bool *connected);					// kiem tra va cham cua nhan vat voi ban do
+	bool checkToMap(Map& map_data, bool *connected);					// kiem tra va cham cua nhan vat voi ban do
 	void setMapXY(const int mapX, int mapY) {						// cap nhat ban do
 		map_x = mapX; 
 		map_y = mapY; 
 	};
-	void centerEntityOnMap(Map &map_data);							// Thiet lap ban do chay theo nhan vat
+	void setPos(const float px, const float py) {
+		x_pos = px;
+		y_pos = py;
+	};
+	void setVal(const float vx, const float vy) {
+		x_val = vx;
+		y_val = vy;
+	}
+	void setOnGround(bool v) {
+		on_ground = v;
+	}
+	bool centerEntityOnMap(Map &map_data);							// Thiet lap ban do chay theo nhan vat
 	bool isDied() { return is_died; };								// Kiem tra nhan vat
 	void increaseBlood();											// An mau
 

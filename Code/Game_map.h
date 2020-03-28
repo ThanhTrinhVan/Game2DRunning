@@ -22,9 +22,9 @@ public:
 	GameMap() { ; }
 	~GameMap() { ; }
 
-	void loadMap(const char* name);
-	void loadTiles(SDL_Renderer* screen);
-	void drawMap(SDL_Renderer* screen);
+	bool loadMap(const char* name);
+	bool loadTiles(SDL_Renderer* screen);
+	bool drawMap(SDL_Renderer* screen);
 
 	void setMap(Map& map_data) { game_map = map_data; };
 	Map getMap() const { return game_map; };

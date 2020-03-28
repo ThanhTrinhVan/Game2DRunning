@@ -1,11 +1,11 @@
 #include "Game_map.h"
 
-void GameMap::loadMap(const char* name)
+bool GameMap::loadMap(const char* name)
 {
 	FILE* fp = NULL;
 	fopen_s(&fp, name, "rb");
 	if (fp == NULL)
-		return;
+		return false;
 	game_map.max_x = 0;
 	game_map.max_y = 0;
 	for (int i = 0; i < MAX_MAP_Y; i++) {
@@ -26,10 +26,13 @@ void GameMap::loadMap(const char* name)
 	game_map.start_y = 0;
 	game_map.file_name = name;
 	fclose(fp);
+	return true;
 }
 
-void GameMap::loadTiles(SDL_Renderer* screen)
+bool GameMap::loadTiles(SDL_Renderer* screen)
 {
+	if (screen == NULL)
+		return false;
 	char file_img[100];
 	FILE* fp = NULL;
 	for (int i = 0; i < MAX_TILES_ONSCREEN; i++) {
@@ -40,10 +43,13 @@ void GameMap::loadTiles(SDL_Renderer* screen)
 		fclose(fp);
 		tileMat[i].loadImg(file_img, screen);
 	}
+	return true;
 }
 
-void GameMap::drawMap(SDL_Renderer* screen)
+bool GameMap::drawMap(SDL_Renderer* screen)
 {
+	if (screen == NULL)
+		return false;
 	int x1 = 0, y1 = 0;
 	int x2 = 0, y2 = 0;
 	int map_x = 0, map_y = 0;
@@ -68,4 +74,5 @@ void GameMap::drawMap(SDL_Renderer* screen)
 		}
 		map_y++;
 	}
+	return true;
 }

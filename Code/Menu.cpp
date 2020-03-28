@@ -93,30 +93,43 @@ TypeMenu Menu::showMenu(TTF_Font * font, SDL_Renderer * des)
 	return TypeMenu::Exit;
 }
 
-void Menu::setPos(int px[], int py[])
+bool Menu::setPos(vector<int> px, vector<int> py)
 {
 	if (lstItems.size() > 0)
 		lstItems.clear();
+	if (px.size() != numItems || py.size() != numItems)
+		return false;
 	lstItems = std::vector<Item>(numItems);
 	for (int i = 0; i < numItems; i++) {
 		lstItems[i].pos.x = px[i];
 		lstItems[i].pos.y = py[i];
 	}
+	return true;
 }
 
-void Menu::setLength(int pz[])
+bool Menu::setLength(vector<int> pz)
 {
+	if (pz.size() != numItems)
+		return false;
+	if (lstItems.size() < numItems)
+		lstItems = std::vector<Item>(numItems);
 	for (int i = 0; i < numItems; i++) {
 		lstItems[i].length = pz[i];
 	}
+	return true;
 }
 
-void Menu::setTextItems(std::string * lst)
+bool Menu::setTextItems(vector<std::string> lst)
 {
+	if (lst.size() != numItems)
+		return false;
+	if (lstItems.size() < numItems)
+		lstItems = std::vector<Item>(numItems);
 	for (int i = 0; i < numItems; i++) {
 		lstItems[i].content.setText(lst[i]);
 		lstItems[i].content.setColor(TextObject::BLUE_TEXT);
 		lstItems[i].content.setRect(lstItems[i].pos.x, lstItems[i].pos.y);
 		lstItems[i].content.setSize(lstItems[i].length, 2);
 	}
+	return true;
 }

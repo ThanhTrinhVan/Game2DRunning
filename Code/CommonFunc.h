@@ -10,6 +10,8 @@
 #include <SDL_mixer.h> // sound
 #include <SDL_ttf.h>   // font
 
+using namespace std;
+
 // Thiet lap bien cuc bo, dieu khien chuong trinh
 extern SDL_Window* gWindow[2];	  // extern: Tao mot doi tuong, su dung cho tat ca cac class
 extern SDL_Renderer* gScreen[2];
@@ -84,8 +86,8 @@ namespace SDLCommonFunc
 	bool checkCollision(const SDL_Rect &object1, const SDL_Rect &object2); // kiem tra va cham giua 2 doi tuong
 	bool checkFocus(const int &x, const int &y, const SDL_Rect& rect);	   // kiem tra chuot luot tren rect
 	TypeMenu checkType(std::string txt);								   // kiem tra loai Menu duoc chon
-	void playSound(short typeSound, Mix_Chunk* gSound);					   // thay doi am thanh
+	bool playSound(short typeSound, Mix_Chunk* gSound);					   // thay doi am thanh
 }
+
+bool initData();
 #endif // !COMMON_FUNC_H_
-
-

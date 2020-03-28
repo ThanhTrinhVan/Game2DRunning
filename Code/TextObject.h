@@ -24,6 +24,7 @@ public:
 	};
 	void drawText(TTF_Font* font, SDL_Renderer* des);
 	std::string getText() { return textVal; };
+	SDL_Color getTextColor() { return textColor; };
 
 private:
 	std::string textVal;

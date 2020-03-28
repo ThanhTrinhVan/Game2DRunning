@@ -1,4 +1,5 @@
 #include "PlayerObject.h"
+#include <iostream>
 
 PlayerObject::PlayerObject()
 {
@@ -8,8 +9,8 @@ PlayerObject::PlayerObject()
 	x_val = 0;
 	y_val = 0;
 	stop = false;
-	width_frame = 0;
-	height_frame = 0;
+	width_frame = 64;
+	height_frame = 64;
 	input_type.left_ = 0;
 	input_type.right_ = 0;
 	input_type.jump_ = 0;
@@ -39,13 +40,6 @@ bool PlayerObject::loadImg(std::string path, SDL_Renderer * screen)
 void PlayerObject::show(SDL_Renderer * des)
 {
 	updateImgPlayer(des);
-
-	/*if (input_type.left_ == 1 || input_type.right_ == 1) {
-		frame_id++;
-	}
-	else {
-		frame_id = 0;
-	}*/
 	frame_id++;
 	if (frame_id >= NUMBER_FRAME)
 		frame_id = 0;
@@ -60,47 +54,6 @@ void PlayerObject::show(SDL_Renderer * des)
 
 void PlayerObject::handelInputAction(SDL_Event events, SDL_Renderer * screen)
 {
-	//if (events.type == SDL_KEYDOWN) {
-	//	// nhan phim
-	//	switch (events.key.keysym.sym)
-	//	{
-	//	case SDLK_RIGHT:
-	//	{
-	//		input_type.right_ = 1;
-	//		input_type.left_ = 0;
-	//		updateImgPlayer(screen);
-	//	}
-	//	break;
-	//	case SDLK_LEFT:
-	//	{
-	//		input_type.left_ = 1;
-	//		input_type.right_ = 0;
-	//		updateImgPlayer(screen);
-	//	}
-	//	break;
-	//	default:
-	//		break;
-	//	}
-	//}
-	//else if (events.type == SDL_KEYUP) {
-	//	// tha phim
-	//	switch (events.key.keysym.sym)
-	//	{
-	//	case SDLK_RIGHT:
-	//	{
-	//		input_type.right_ = 0;
-	//	}
-	//	break;
-	//	case SDLK_LEFT:
-	//	{
-	//		input_type.left_ = 0;
-	//	}
-	//	break;
-	//	default:
-	//		break;
-	//	}
-	//}
-
 	if (events.type == SDL_MOUSEBUTTONDOWN) {
 		if (events.button.button == SDL_BUTTON_LEFT)
 			input_type.jump_ = 1;
@@ -139,8 +92,10 @@ void PlayerObject::doPlayer(Map & map_data, bool *connected)
 	centerEntityOnMap(map_data);
 }
 
-void PlayerObject::checkToMap(Map & map_data, bool* connected)
+bool PlayerObject::checkToMap(Map & map_data, bool* connected)
 {
+	if (connected == NULL || &map_data == NULL)
+		return false;
 	int x1 = 0, y1 = 0;
 	int x2 = 0, y2 = 0;
 
@@ -276,10 +231,13 @@ void PlayerObject::checkToMap(Map & map_data, bool* connected)
 	{
 		is_died = true;
 	}
+	return true;
 }
 
-void PlayerObject::centerEntityOnMap(Map & map_data)
+bool PlayerObject::centerEntityOnMap(Map & map_data)
 {
+	if (&map_data == NULL)
+		return false;
 	map_data.start_x = x_pos - (SCREEN_WIDTH / 3); // Khi nhan vat di den 1/3 ban do thi ban do duoc cuon theo
 	if (map_data.start_x < 0) {
 		map_data.start_x = 0;
@@ -292,6 +250,7 @@ void PlayerObject::centerEntityOnMap(Map & map_data)
 		map_data.start_y = 0;
 	else if (map_data.start_y + SCREEN_HEIGHT >= map_data.max_y)
 		map_data.start_y = map_data.max_y - SCREEN_HEIGHT;
+	return true;
 }
 
 void PlayerObject::increaseBlood()
@@ -310,7 +269,13 @@ SDL_Rect PlayerObject::getRectFrame() const
 void PlayerObject::updateImgPlayer(SDL_Renderer * des)
 {
 	if (on_ground == true) {
-		loadImg("./Data/player/run.png", des);
+		if (stop == false) {
+			loadImg("./Data/player/run.png", des);
+		}
+		else {
+			loadImg("./Data/player/jump.png", des);
+		}
+		//loadImg("./Data/player/run.png", des);
 	}
 	else {
 		loadImg("./Data/player/jump.png", des);

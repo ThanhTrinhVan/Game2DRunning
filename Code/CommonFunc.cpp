@@ -11,6 +11,8 @@ int Blood = LENGTH_BLOOD_MAX;
 
 bool SDLCommonFunc::checkCollision(const SDL_Rect & object1, const SDL_Rect & object2)
 {
+	if (&object1 == NULL || &object2 == NULL)
+		return false;
 	int left_a = object1.x;
 	int right_a = object1.x + object1.w;
 	int top_a = object1.y;
@@ -98,6 +100,8 @@ bool SDLCommonFunc::checkCollision(const SDL_Rect & object1, const SDL_Rect & ob
 
 bool SDLCommonFunc::checkFocus(const int & x, const int & y, const SDL_Rect & rect)
 {
+	if (&rect == NULL)
+		return false;
 	if (x >= rect.x && x < (rect.x + rect.w) &&
 		y >= rect.y && y < (rect.y + rect.h))
 		return true;
@@ -129,7 +133,7 @@ TypeMenu SDLCommonFunc::checkType(std::string txt)
 	return TypeMenu::Nothing;
 }
 
-void SDLCommonFunc::playSound(short typeSound, Mix_Chunk * gSound)
+bool SDLCommonFunc::playSound(short typeSound, Mix_Chunk * gSound)
 {
 	if (gSound != NULL)
 		gSound = NULL;
@@ -163,7 +167,45 @@ void SDLCommonFunc::playSound(short typeSound, Mix_Chunk * gSound)
 	if (gSound == NULL)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error loading sound!!!", Mix_GetError(), NULL);
-		exit(EXIT_FAILURE);
+		return false;
 	}
-	return;
+	return true;
+}
+
+bool initData()
+{
+	bool success = true;
+	int ret = SDL_Init(SDL_INIT_VIDEO);
+	if (ret < 0)
+		return false;
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+	gWindow[0] = SDL_CreateWindow("Running game2D", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	if (gWindow[0] == NULL)
+		return false;
+	else {
+		gScreen[0] = SDL_CreateRenderer(gWindow[0], -1, SDL_RENDERER_ACCELERATED);
+		if (gScreen[0] == NULL)
+			return false;
+		else {
+			SDL_SetRenderDrawColor(gScreen[0], RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR, RENDER_DRAW_COLOR);
+			if (!(IMG_Init(IMG_INIT_PNG) && IMG_INIT_PNG))
+				success = false;
+
+			if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+				return false;
+			}
+			gSound = Mix_LoadWAV("./Data/audio/nhac_nen.wav");
+			if (gSound == NULL) {
+				return false;
+			}
+
+			if (TTF_Init() == -1)
+				return false;
+			gFont = TTF_OpenFont("./Data/8-BIT WONDER.ttf", 20);
+			if (gFont == NULL)
+				return false;
+		}
+	}
+	return success;
 }

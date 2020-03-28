@@ -15,6 +15,10 @@ public:
 		rect_.x = x;
 		rect_.y = y;
 	}
+	void setSizeRect(const int &w, const int &h) {
+		rect_.w = w;
+		rect_.h = h;
+	}
 	SDL_Rect getRect() const {
 		return rect_;
 	}

@@ -31,7 +31,7 @@ public:
 	int get_width_frame() const { return frame_width; };
 	int get_height_frame() const { return frame_height; };
 
-	void doBird(Map& gMap);
+	void doBird();
 
 private:
 	int map_x;						// Vi tri cua ban do hien tai trong mang ban do
