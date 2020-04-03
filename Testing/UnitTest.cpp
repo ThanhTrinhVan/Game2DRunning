@@ -64,7 +64,7 @@ namespace UnitTest
 			Assert::AreEqual(false, SDLCommonFunc::playSound(6, gSound));
 		}
 	};
-	
+
 	TEST_CLASS(MenuClass)
 	{
 	public:
@@ -95,7 +95,7 @@ namespace UnitTest
 	private:
 		Menu* menu = new Menu();
 	};
-	
+
 	TEST_CLASS(PlayerObjectClass)
 	{
 	public:
@@ -153,7 +153,7 @@ namespace UnitTest
 			return game_map;
 		};
 	};
-	
+
 	TEST_CLASS(BirdObjectClass)
 	{
 	public:
@@ -209,6 +209,19 @@ namespace UnitTest
 			Assert::AreEqual(false, Base.loadImg("", gScreen[0]));
 			Assert::AreEqual(false, Base.loadImg("./Data/player/run.png", NULL));
 		}
+
+		TEST_METHOD(setRect)
+		{
+			BaseObject Base;
+			SDL_Rect rect_;
+			int x, y;
+			Base.setRect(100,100);
+			rect_ = Base.getRect();
+			x = rect_.x;
+			y = rect_.y;
+			Assert::AreEqual(100, x);
+			Assert::AreEqual(100, y);
+		}
 	};
 
 	TEST_CLASS(TextObjectClass)
@@ -223,6 +236,21 @@ namespace UnitTest
 			Assert::AreEqual(0, x);
 			Assert::AreEqual(0, y);
 		}
+
+		TEST_METHOD(getTextColor)
+		{
+			TextObject Text;
+			Text.setColor(1);
+			SDL_Color color;
+			bool check = false;
+			color = Text.getTextColor();
+			if ((color.r = 255) || (color.g = 255) || (color.b = 255))
+			{
+				check = true;
+			}
+			Assert::AreEqual(true, check);
+
+		}
 		TEST_METHOD(SetColor)
 		{
 			TextObject Text;
@@ -230,7 +258,7 @@ namespace UnitTest
 			bool check = false;
 			SDL_Color color;
 			color = Text.getTextColor();
-			if ((color.r = 255)||(color.g = 0)||(color.b = 0))
+			if ((color.r = 255) || (color.g = 0) || (color.b = 0))
 			{
 				check = true;
 			}
@@ -244,11 +272,51 @@ namespace UnitTest
 			Text.setText("Hello");
 			Assert::AreEqual(1, str.compare(textVal));
 		}
+
+		TEST_METHOD(SetSize)
+		{
+			TextObject Text;
+			int x, y;
+			Text.setSize(300, 200);
+			x = Text.getRect().w;
+			y = Text.getRect().h;
+			Assert::AreEqual(6400, x);
+			Assert::AreEqual(6400, y);
+		}
+
+		TEST_METHOD(getText)
+		{
+			TextObject Text;
+			std::string textVal;
+			std::string str = "Hello";
+			Text.setText("Hello");
+			Text.getText();
+			Assert::AreEqual(1, str.compare(textVal));
+		}
+
+
 	};
 
 	TEST_CLASS(PillarObjectClass)
 	{
 	public:
+		TEST_METHOD(getPosX)
+		{
+			PillarObject Pillar;
+			Assert::AreEqual(0, Pillar.getPosX());
+		}
+
+		TEST_METHOD(getPosY)
+		{
+			PillarObject Pillar;
+			Assert::AreEqual(0, Pillar.getPosY());
+		}
+
+		TEST_METHOD(getHeight)
+		{
+			PillarObject Pillar;
+			Assert::AreEqual(0, Pillar.getHeight());
+		}
 		TEST_METHOD(reset)
 		{
 			PillarObject Pillar;
@@ -258,6 +326,32 @@ namespace UnitTest
 			Assert::AreEqual(0, Pillar.getPosX());
 			Assert::AreEqual(0, Pillar.getPosY());
 		}
+
+		TEST_METHOD(Init)
+		{
+			PillarObject Pillar;
+			Assert::AreEqual(false, Pillar.isReclined());
+			Assert::AreEqual(0, Pillar.getHeight());
+			Assert::AreEqual(0, Pillar.getPosX());
+			Assert::AreEqual(0, Pillar.getPosY());
+		}
+
+		TEST_METHOD(Recline)
+		{
+			PillarObject Pillar;
+			Pillar.recline(1, gScreen[0]);
+			Assert::AreEqual(false, Pillar.isReclined());
+			Pillar.recline(6, gScreen[0]);
+			Assert::AreEqual(true, Pillar.isReclined());
+		}
+
+		TEST_METHOD(SetRecline)
+		{
+			PillarObject Pillar;
+			Pillar.setReclined(true);
+			Assert::AreEqual(true, Pillar.isReclined());
+		}
+		
 	};
 
 	TEST_CLASS(ImpTimerObject)
@@ -283,7 +377,7 @@ namespace UnitTest
 			ImpTimer Timer;
 			Timer.start();
 			Timer.paused();
-		    Assert::AreEqual(true, Timer.is_pause());
+			Assert::AreEqual(true, Timer.is_pause());
 		}
 		TEST_METHOD(Continue)
 		{
